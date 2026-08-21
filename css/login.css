@@ -1,0 +1,366 @@
+/* ==========================================================================
+   DESI MALL - LOGIN & SIGNUP PAGE STYLES
+   ========================================================================== */
+
+.auth-main-layout {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 16px;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Card Wrapper */
+.auth-card {
+    display: flex;
+    width: 100%;
+    max-width: 850px;
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    min-height: 520px;
+}
+
+/* Left Sidebar (Branding) */
+.auth-brand-sidebar {
+    width: 38%;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.auth-brand-sidebar h2 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.auth-brand-sidebar p {
+    font-size: 14px;
+    color: #fff0e6;
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+.brand-illustration {
+    font-size: 90px;
+    color: rgba(255, 255, 255, 0.2);
+    text-align: center;
+    margin-top: auto;
+}
+
+/* Right Form Wrapper */
+.auth-form-wrapper {
+    width: 62%;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Auth Tabs (Login / Signup) */
+.auth-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--muted-text);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+/* Sub Tabs (Mobile vs Email) */
+.sub-tab-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+}
+
+.sub-tab {
+    flex: 1;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    color: var(--muted-text);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.sub-tab.active {
+    background-color: var(--white);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Forms & Inputs */
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    transition: var(--transition-fast);
+}
+
+.input-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-alpha);
+}
+
+/* Mobile Input with +91 Prefix */
+.mobile-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.country-code {
+    padding: 11px 12px;
+    background-color: #f0f0f0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark-text);
+    border-right: 1px solid var(--border-color);
+}
+
+.mobile-input-wrapper input {
+    border: none;
+    border-radius: 0;
+}
+
+.mobile-input-wrapper input:focus {
+    box-shadow: none;
+}
+
+/* Password Eye Toggle */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    color: var(--muted-text);
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.toggle-password:hover {
+    color: var(--primary);
+}
+
+.otp-hint {
+    font-size: 12px;
+    color: var(--muted-text);
+    margin-top: 2px;
+}
+
+/* Remember Me & Forgot Password */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: var(--dark-text);
+}
+
+.remember-me input {
+    accent-color: var(--primary);
+    width: 16px;
+    height: 16px;
+}
+
+.forgot-link {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
+.btn-auth {
+    height: 44px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    margin-top: 6px;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Social Login Divider */
+.social-login-divider {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.social-login-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.social-login-divider span {
+    position: relative;
+    background-color: var(--white);
+    padding: 0 10px;
+    font-size: 12px;
+    color: var(--muted-text);
+    font-weight: 700;
+}
+
+/* Google Button */
+.btn-google {
+    width: 100%;
+    height: 42px;
+    border: 1px solid var(--border-color);
+    background-color: var(--white);
+    color: var(--dark-text);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-google:hover {
+    background-color: #f9f9f9;
+    border-color: #ccc;
+}
+
+.btn-google i {
+    color: #db4437;
+    font-size: 16px;
+}
+
+/* Alert Message Styling */
+.auth-alert {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.auth-alert.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.auth-alert.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .auth-card {
+        flex-direction: column;
+        max-width: 450px;
+    }
+
+    .auth-brand-sidebar {
+        width: 100%;
+        padding: 24px;
+    }
+
+    .auth-brand-sidebar h2 {
+        font-size: 20px;
+    }
+
+    .brand-illustration {
+        display: none;
+    }
+
+    .auth-form-wrapper {
+        width: 100%;
+        padding: 20px;
+    }
+}
+/* Phase 3 login feedback */
+.login-message{margin:0 0 14px;padding:11px 13px;border-radius:10px;font-size:14px;font-weight:600}
+.login-message.info{background:#eff6ff;color:#1d4ed8}
+.login-message.success{background:#ecfdf5;color:#047857}
+.login-message.error{background:#fef2f2;color:#b91c1c}
+button:disabled{opacity:.65;cursor:not-allowed}

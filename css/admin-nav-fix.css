@@ -1,0 +1,9 @@
+
+/* Unified admin navigation */
+.admin-shell{min-height:100vh;display:grid;grid-template-columns:290px minmax(0,1fr)}
+.admin-side{position:sticky;top:0;height:100vh;background:#172238;border-right:1px solid #2d3d55;padding:26px 20px;display:flex;flex-direction:column;box-sizing:border-box}
+.admin-brand{display:flex;align-items:center;gap:9px;color:#fff;text-decoration:none;font-size:28px;font-weight:900;margin-bottom:30px}.admin-brand span{color:#ff6b00}.admin-brand i{color:#fff}
+.admin-nav{display:grid;gap:8px}.admin-nav a{display:flex;align-items:center;gap:13px;color:#edf2f8;text-decoration:none;padding:14px 15px;border-radius:10px;font-size:17px}.admin-nav a:hover{background:#25344c}.admin-nav a.active{background:#5a352b;color:#fff}.admin-nav i{width:20px;text-align:center}
+.admin-side-foot{margin-top:auto;color:#9fb0c7;font-size:13px}.admin-main{min-width:0;padding:30px 32px}
+@media(max-width:900px){.admin-shell{display:block}.admin-side{position:relative;height:auto}.admin-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-side-foot{margin-top:18px}.admin-main{padding:20px}}
+@media(max-width:520px){.admin-nav{grid-template-columns:1fr}.admin-main{padding:14px}}

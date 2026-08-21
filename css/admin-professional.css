@@ -1,0 +1,193 @@
+/* DesiMall Admin Center Professional v0.13.0 */
+:root{
+  --ac-bg:#0f151d;
+  --ac-side:#0d1722;
+  --ac-panel:#172231;
+  --ac-border:#2b3b50;
+  --ac-muted:#91a2b7;
+  --ac-text:#eef4fb;
+  --ac-orange:#ff6b00;
+}
+body{
+  font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  background:var(--ac-bg)!important;
+}
+.admin-side{
+  width:256px!important;
+  background:linear-gradient(180deg,#101a27 0%,#0c141e 100%)!important;
+  border-right:1px solid #26364a!important;
+  padding:20px 14px 14px!important;
+  overflow:auto!important;
+}
+.admin-main{
+  margin-left:256px!important;
+  padding:28px 34px 48px!important;
+  max-width:none!important;
+}
+.admin-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  min-height:48px!important;
+  padding:0 10px 16px!important;
+  margin-bottom:4px!important;
+  border-bottom:1px solid #26364a!important;
+  font-size:22px!important;
+  font-weight:850!important;
+  letter-spacing:-.5px!important;
+}
+.admin-nav{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:3px!important;
+}
+.admin-nav-group{
+  margin:20px 10px 7px!important;
+  color:#71859d!important;
+  font-size:9px!important;
+  font-weight:850!important;
+  letter-spacing:1.25px!important;
+  text-transform:uppercase!important;
+}
+.admin-nav a{
+  min-height:43px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:11px!important;
+  padding:0 11px!important;
+  border-radius:9px!important;
+  color:#c7d4e3!important;
+  font-size:12.5px!important;
+  font-weight:650!important;
+  text-decoration:none!important;
+  border:1px solid transparent!important;
+}
+.admin-nav a i{
+  width:18px!important;
+  text-align:center!important;
+  color:#8fb0d8!important;
+}
+.admin-nav a:hover{
+  background:#152335!important;
+  color:#fff!important;
+}
+.admin-nav a.active{
+  background:linear-gradient(90deg,#4b2b1d,#27211e)!important;
+  border-color:#80421d!important;
+  color:#fff!important;
+}
+.admin-nav a.active i{color:var(--ac-orange)!important}
+.admin-side-foot{
+  margin-top:22px!important;
+  padding:14px 10px 4px!important;
+  border-top:1px solid #26364a!important;
+  color:#687c93!important;
+  font-size:10px!important;
+}
+.admin-head{
+  min-height:78px!important;
+  margin-bottom:20px!important;
+  padding-bottom:18px!important;
+  border-bottom:1px solid #293b51!important;
+}
+.admin-head h1{
+  font-size:30px!important;
+  letter-spacing:-.7px!important;
+  line-height:1.15!important;
+}
+.admin-head p{
+  margin-top:6px!important;
+  color:var(--ac-muted)!important;
+  font-size:13px!important;
+}
+.a-btn{
+  min-height:40px!important;
+  border-radius:9px!important;
+  font-size:12px!important;
+  font-weight:750!important;
+}
+.panel,.stat{
+  border-radius:12px!important;
+  background:var(--ac-panel)!important;
+  border:1px solid var(--ac-border)!important;
+  box-shadow:none!important;
+}
+@media(max-width:1050px){
+  .admin-main{margin-left:0!important;padding:22px 18px 44px!important}
+}
+
+
+/* ============================================================
+   DesiMall Admin Unified Shell Layout Fix v0.13.5
+   admin-live.css already uses a two-column CSS grid.
+   Do NOT add a second margin-left/fixed-sidebar offset.
+   ============================================================ */
+
+body[data-admin-unified="1"] .admin-shell{
+  min-height:100vh!important;
+  display:grid!important;
+  grid-template-columns:270px minmax(0,1fr)!important;
+  align-items:start!important;
+}
+
+body[data-admin-unified="1"] .admin-side{
+  position:sticky!important;
+  top:0!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:auto!important;
+  height:100vh!important;
+  max-height:100vh!important;
+  box-sizing:border-box!important;
+  z-index:20!important;
+}
+
+body[data-admin-unified="1"] .admin-main{
+  margin-left:0!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  min-height:100vh!important;
+  box-sizing:border-box!important;
+  padding:28px 34px 48px!important;
+}
+
+body[data-admin-unified="1"] .admin-main > *,
+body[data-admin-unified="1"] .admin-page-content,
+body[data-admin-unified="1"] .wrap,
+body[data-admin-unified="1"] .dispatch-wrap,
+body[data-admin-unified="1"] .finance-wrap,
+body[data-admin-unified="1"] .returns-wrap{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+
+body[data-admin-unified="1"] .admin-page-content,
+body[data-admin-unified="1"] .wrap,
+body[data-admin-unified="1"] .dispatch-wrap,
+body[data-admin-unified="1"] .finance-wrap,
+body[data-admin-unified="1"] .returns-wrap{
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+@media(max-width:1050px){
+  body[data-admin-unified="1"] .admin-shell{
+    grid-template-columns:1fr!important;
+  }
+
+  body[data-admin-unified="1"] .admin-side{
+    position:relative!important;
+    width:100%!important;
+    height:auto!important;
+    max-height:none!important;
+  }
+
+  body[data-admin-unified="1"] .admin-main{
+    margin-left:0!important;
+    width:100%!important;
+    padding:22px 18px 44px!important;
+  }
+}

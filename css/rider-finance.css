@@ -1,0 +1,17 @@
+
+.rf-note{display:flex;gap:14px;align-items:center;padding:18px;border-radius:16px;background:linear-gradient(100deg,#17462b,#5a321f);margin-bottom:18px}
+.rf-note>i{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;background:#ffffff1c;color:#fff;font-size:21px}
+.rf-note strong,.rf-note span{display:block}.rf-note span{margin-top:4px;color:#d6e7d9}
+.rf-stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.rf-stats article{background:#19263b;border:1px solid #31445f;border-radius:15px;padding:16px}
+.rf-stats small{color:#aebed2}.rf-stats strong{display:block;font-size:25px;margin-top:8px}.rf-stats .cod{border-color:#d99012}
+.rf-payout-notice{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:13px;margin-bottom:18px}
+.rf-payout-notice.blocked{background:#4a2a18;border:1px solid #9b581f}.rf-payout-notice.ready{background:#153d27;border:1px solid #2d7548}
+.rf-payout-notice i{font-size:22px}.rf-payout-notice strong,.rf-payout-notice span{display:block}.rf-payout-notice span{font-size:12px;margin-top:3px;color:#c7d4ca}
+.rf-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:16px}
+.rf-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.rf-head h2{margin:0}.rf-head p{margin:4px 0 0;color:#9fb1c9}
+.rf-table-wrap{overflow:auto}.rf-table{width:100%;border-collapse:collapse;min-width:600px}.rf-table th,.rf-table td{text-align:left;padding:12px;border-bottom:1px solid #30425c}.rf-table th{color:#ffc17c;font-size:12px}.rf-table td small{display:block;color:#9dafc6;margin-top:3px}
+.rf-badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:#263a56;font-size:10px;font-weight:800}.rf-badge.paid,.rf-badge.bonus{background:#185032;color:#bdf2cb}.rf-badge.pending{background:#6a430f;color:#ffe2a7}.rf-badge.penalty{background:#64232d;color:#ffd0d5}
+.rf-empty{text-align:center;color:#9fb1c9}
+@media(max-width:1200px){.rf-stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:850px){.rf-grid{grid-template-columns:1fr}.rf-stats{grid-template-columns:repeat(2,1fr)}}
