@@ -1,0 +1,12 @@
+DESIMALL RIDER TEST BUILD v0.29.6
+Source: Rider public test build v0.29.5
+Changes:
+- Professional Seller-style dark split Rider login/register UI.
+- Show/Hide password controls.
+- Forgot password option with truthful Admin/Support reset guidance.
+- Remember Rider identifier option.
+- Friendly wrong/invalid password message.
+- Existing Rider login/register/API/session behavior preserved.
+Backend: Existing https://desimall-backend.onrender.com
+Database: Existing Supabase
+IMPORTANT: Add https://desimall-rider.onrender.com to backend CORS_ORIGINS for live login/API access.
