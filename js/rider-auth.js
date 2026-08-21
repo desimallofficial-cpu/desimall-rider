@@ -33,6 +33,39 @@ const RiderAuth = {
       this.register();
     };
 
+    const togglePassword = (buttonId, inputId) => {
+      const btn = document.getElementById(buttonId);
+      const input = document.getElementById(inputId);
+      if (!btn || !input) return;
+      btn.onclick = () => {
+        const showing = input.type === 'text';
+        input.type = showing ? 'password' : 'text';
+        btn.textContent = showing ? 'Show' : 'Hide';
+        btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+      };
+    };
+
+    togglePassword('showLoginPassword', 'password');
+    togglePassword('showRegisterPassword', 'rPassword');
+
+    const forgotBtn = document.getElementById('forgotPasswordBtn');
+    const forgotNote = document.getElementById('forgotPasswordNote');
+    if (forgotBtn && forgotNote) {
+      forgotBtn.onclick = () => {
+        forgotNote.classList.toggle('show');
+      };
+    }
+
+    const remember = document.getElementById('rememberRider');
+    const identifier = document.getElementById('identifier');
+    try {
+      const remembered = localStorage.getItem('desimall_rider_identifier') || '';
+      if (remembered && identifier) {
+        identifier.value = remembered;
+        if (remember) remember.checked = true;
+      }
+    } catch (_) {}
+
     this.check();
   },
 
@@ -80,9 +113,34 @@ const RiderAuth = {
         })
       );
 
+      try {
+        const remember = document.getElementById('rememberRider');
+        const identifier = document.getElementById('identifier')?.value.trim() || '';
+        if (remember?.checked && identifier) {
+          localStorage.setItem('desimall_rider_identifier', identifier);
+        } else {
+          localStorage.removeItem('desimall_rider_identifier');
+        }
+      } catch (_) {}
+
       location.replace('dashboard.html');
     } catch (error) {
-      this.msg(error?.message || 'Login failed');
+      const rawMessage = String(error?.message || '').trim().toLowerCase();
+      const status = Number(error?.status || 0);
+
+      const invalidCredentials =
+        status === 400 ||
+        status === 401 ||
+        rawMessage.includes('invalid login credentials') ||
+        rawMessage.includes('invalid credentials') ||
+        rawMessage.includes('wrong password') ||
+        rawMessage.includes('incorrect password');
+
+      this.msg(
+        invalidCredentials
+          ? 'Wrong / invalid password. Please enter a valid password.'
+          : (error?.message || 'Rider login failed. Please try again.')
+      );
     } finally {
       btn.disabled = false;
     }
