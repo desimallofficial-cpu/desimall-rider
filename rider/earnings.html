@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rider Account - DesiMall</title>
+<link rel="stylesheet" href="../css/rider.css">
+<style>
+.money-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px}
+.money-card{background:#18263a;border:1px solid #31445f;border-radius:16px;padding:18px}
+.money-card span{display:block;color:#9fb0c4;font-size:13px;margin-bottom:8px}.money-card strong{font-size:28px}
+.simple-note{background:#142334;border:1px solid #2b415c;border-radius:14px;padding:14px;color:#b8c8da;line-height:1.5;margin-bottom:18px}
+.account-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px;align-items:center;padding:15px 0;border-bottom:1px solid #27384f}
+.account-row:last-child{border-bottom:0}.account-row small{display:block;color:#91a3b9;margin-top:4px}.good-money{color:#6ee7a2}.cod-money{color:#ffb15c}
+@media(max-width:800px){.money-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.account-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="r-shell">
+<aside class="r-side">
+<div class="r-brand">Desi<span>Mall</span></div>
+<div class="r-user"><strong id="riderName">Rider</strong><small>Delivery Partner</small></div>
+<nav class="r-nav">
+<a href="dashboard.html">Deliveries</a>
+<a href="returns.html">Return Pickups</a>
+<a class="active" href="earnings.html">Rider Account</a>
+<button id="logoutBtn">Logout</button>
+</nav>
+</aside>
+<main class="r-main">
+<header class="r-head">
+<div><h1>Rider Account</h1><p>Your earnings and COD money, kept separate and easy to understand.</p></div>
+<button class="r-btn secondary" id="refreshBtn">Refresh</button>
+</header>
+<section class="money-grid">
+<article class="money-card"><span>Today's Earnings</span><strong id="todayEarnings">₹0</strong></article>
+<article class="money-card"><span>COD Cash With You</span><strong id="codCash">₹0</strong></article>
+<article class="money-card"><span>COD To Deposit</span><strong id="codDeposit">₹0</strong></article>
+<article class="money-card"><span>Pending Payout</span><strong id="pendingPayout">₹0</strong></article>
+</section>
+<div class="simple-note"><b>Important:</b> COD cash is company money. Your delivery earnings are shown separately.</div>
+<section class="r-panel"><div class="r-toolbar"><h2 style="margin:0">Recent Deliveries</h2></div><div id="recentList"></div></section><section class="r-panel" style="margin-top:18px"><div class="r-toolbar"><h2 style="margin:0">Payout History</h2></div><div id="payoutList"></div></section>
+</main>
+</div>
+<script src="../js/api.js"></script>
+<script src="../js/rider-account.js"></script>
+</body>
+</html>
