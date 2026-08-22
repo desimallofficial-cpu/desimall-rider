@@ -34,3 +34,15 @@
 .r-map-btn{white-space:nowrap;text-decoration:none;padding:10px 12px;border-radius:9px;background:#ff6b00;color:#fff;font-weight:900;font-size:11px;cursor:pointer}.r-route-missing{font-size:10px;color:#fda4af}
 .r-otp-delivery{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.r-otp-delivery input{height:40px;min-width:180px;padding:0 12px;border:1px solid #3a4b61;border-radius:9px;background:#101923;color:#fff;font-weight:800;letter-spacing:.08em}.r-otp-delivery button{cursor:pointer}
 @media(max-width:650px){.r-route-card{align-items:stretch;flex-direction:column}.r-map-btn{text-align:center}.r-otp-delivery input,.r-otp-delivery button{width:100%}}
+
+/* Pickup / delivery routing v0.30.8 */
+.r-route-card{box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.r-route-card.pickup{border-color:rgba(255,107,0,.45);background:linear-gradient(135deg,rgba(255,107,0,.08),#101b28 46%)}
+.r-route-card.delivery{border-color:rgba(18,183,106,.35);background:linear-gradient(135deg,rgba(18,183,106,.07),#101b28 46%)}
+.r-route-card.warning{border-color:#5d6b7d;background:#101923}
+.r-route-copy{min-width:0;flex:1}
+.r-route-quality{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900}
+.r-route-quality.precise{background:rgba(18,183,106,.12);color:#86efac;border:1px solid rgba(18,183,106,.25)}
+.r-route-quality.address{background:rgba(245,158,11,.10);color:#fcd34d;border:1px solid rgba(245,158,11,.22)}
+.r-map-btn{transition:transform .12s ease,filter .12s ease;cursor:pointer!important}
+.r-map-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
