@@ -1,3 +1,4 @@
+window.DESIMALL_RIDER_BUILD='v0.31.6';
 const RiderDashboard = {
   key: 'desimall_rider_session',
   session: {},
@@ -95,6 +96,86 @@ const RiderDashboard = {
       : '<div class="r-empty">Abhi koi assigned delivery nahi hai.</div>';
   },
 
+  mapUrl(lat, lon, address='') {
+    if (Number.isFinite(Number(lat)) && Number.isFinite(Number(lon))) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${Number(lat)},${Number(lon)}`)}`;
+    }
+    if (address) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    return '';
+  },
+
+  routeBlock(o) {
+    const status=String(o.RiderStatus||'').toLowerCase();
+    const picked=/picked up|on the way|reached customer|delivered/.test(status);
+    const stops=Array.isArray(o.PickupStops)?o.PickupStops:[];
+
+    if(!picked){
+      if(!stops.length){
+        return `<div class="r-route-panel">
+          <div class="r-route-card pickup warning">
+            <div>
+              <small>PICKUP LOCATION</small>
+              <strong>Seller pickup location loading…</strong>
+              <p>Refresh once. If this remains, seller pickup data is not available from backend.</p>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      const cards=stops.map(s=>{
+        const hasGps=Number.isFinite(Number(s.Latitude))&&Number.isFinite(Number(s.Longitude));
+        const url=this.mapUrl(s.Latitude,s.Longitude,s.Address);
+
+        return `<div class="r-route-card pickup">
+          <div class="r-route-copy">
+            <small>PICKUP LOCATION</small>
+            <strong>${this.esc(s.ShopName||'Seller')}</strong>
+            <p>${this.esc(s.Address|| (hasGps ? 'Precise shop GPS saved' : 'Seller address not available'))}</p>
+            <span class="r-route-quality ${hasGps?'precise':'address'}">
+              <i class="fa-solid ${hasGps?'fa-location-dot':'fa-map'}"></i>
+              ${hasGps?'Precise shop GPS':'Address-based navigation'}
+            </span>
+          </div>
+          ${url
+            ? `<a class="r-map-btn" target="_blank" rel="noopener" href="${url}">
+                <i class="fa-solid fa-route"></i> Navigate to Seller
+              </a>`
+            : `<span class="r-route-missing">Seller pickup location not set</span>`}
+        </div>`;
+      }).join('');
+
+      return `<div class="r-route-panel">${cards}</div>`;
+    }
+
+    const customerUrl=this.mapUrl(
+      o.CustomerLatitude,
+      o.CustomerLongitude,
+      o.DeliveryAddress
+    );
+    const hasCustomerGps=
+      Number.isFinite(Number(o.CustomerLatitude)) &&
+      Number.isFinite(Number(o.CustomerLongitude));
+
+    return `<div class="r-route-panel">
+      <div class="r-route-card delivery">
+        <div class="r-route-copy">
+          <small>DELIVERY LOCATION</small>
+          <strong>${this.esc(o.CustomerName||'Customer')}</strong>
+          <p>${this.esc(o.DeliveryAddress||'')}</p>
+          <span class="r-route-quality ${hasCustomerGps?'precise':'address'}">
+            <i class="fa-solid ${hasCustomerGps?'fa-location-dot':'fa-map'}"></i>
+            ${hasCustomerGps?'Precise customer GPS':'Address-based navigation'}
+          </span>
+        </div>
+        ${customerUrl
+          ? `<a class="r-map-btn" target="_blank" rel="noopener" href="${customerUrl}">
+              <i class="fa-solid fa-route"></i> Navigate to Customer
+            </a>`
+          : `<span class="r-route-missing">Customer delivery location unavailable</span>`}
+      </div>
+    </div>`;
+  },
+
   card(o) {
     const items = (o.Items || [])
       .map(i => `${this.esc(i.ProductName)} × ${Number(i.Qty || 0)}`)
@@ -117,6 +198,8 @@ const RiderDashboard = {
         <i class="fa-solid fa-location-dot"></i>
         Customer live map tabhi chalega jab upar <b>Start Live Location</b> ON ho.
       </div>` : ''}
+
+      ${this.routeBlock(o)}
 
       <div class="r-order-body">
         <div>
@@ -156,10 +239,90 @@ const RiderDashboard = {
         return b('Customer तक पहुँच गए', 'Reached Customer', 'success');
 
       case 'reached customer':
-        return b('Delivered', 'Delivered', 'success');
+        return `
+          <div class="r-delivery-otp-card">
+            <div class="r-delivery-otp-copy">
+              <span class="r-delivery-otp-kicker">
+                <i class="fa-solid fa-shield-halved"></i> DELIVERY VERIFICATION
+              </span>
+              <strong>Customer से 6-digit OTP लें</strong>
+              <small>सही OTP verify होने के बाद ही order Delivered होगा.</small>
+            </div>
 
+            <div class="r-otp-delivery">
+              <input
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="one-time-code"
+                maxlength="6"
+                id="otp_${this.esc(id)}"
+                class="r-otp-input"
+                placeholder="Enter 6-digit OTP"
+                oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6)"
+              >
+              <button
+                type="button"
+                class="r-btn success r-otp-submit"
+                onclick="RiderDashboard.deliverWithOtp('${this.esc(id)}')"
+              >
+                <i class="fa-solid fa-circle-check"></i>
+                Verify OTP & Deliver
+              </button>
+            </div>
+
+            <div class="r-otp-message" id="otpmsg_${this.esc(id)}"></div>
+          </div>`;
       default:
         return '<span class="r-status">अभी कोई action नहीं</span>';
+    }
+  },
+
+  async deliverWithOtp(id) {
+    const input=document.getElementById(`otp_${id}`);
+    const msg=document.getElementById(`otpmsg_${id}`);
+    const otp=String(input?.value||'').replace(/\D/g,'').slice(0,6);
+
+    const setMsg=(text,type='')=>{
+      if(!msg)return;
+      msg.className=`r-otp-message ${type}`.trim();
+      msg.textContent=text||'';
+    };
+
+    if(otp.length!==6){
+      setMsg('Please enter the 6-digit OTP shown to the customer.','error');
+      input?.focus();
+      return;
+    }
+
+    const btn=input?.closest('.r-otp-delivery')?.querySelector('.r-otp-submit');
+    if(btn){
+      btn.disabled=true;
+      btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+    }
+    setMsg('OTP verify ho raha hai...','info');
+
+    try{
+      const r=await DesiMallAPI.updateRiderOrderStatus(
+        id,
+        'Delivered',
+        this.session.token||'',
+        {DeliveryOTP:otp}
+      );
+
+      if(r?.success){
+        setMsg('OTP verified. Order delivered successfully.','success');
+        await this.load();
+        return;
+      }
+
+      setMsg(r?.message||'Wrong / invalid OTP. Please enter the customer OTP.','error');
+    }catch(error){
+      setMsg(error?.message||'Wrong / invalid OTP. Please enter the customer OTP.','error');
+    }finally{
+      if(btn && document.body.contains(btn)){
+        btn.disabled=false;
+        btn.innerHTML='<i class="fa-solid fa-circle-check"></i> Verify OTP & Deliver';
+      }
     }
   },
 
