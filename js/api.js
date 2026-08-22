@@ -1388,6 +1388,14 @@ const DesiMallAPI = {
     );
   },
 
+  updateRiderLiveLocation(data = {}, token = '') {
+    return this._roleRest('rider', '/api/v1/rider/location', {
+      method: 'PATCH',
+      data,
+      token
+    });
+  },
+
   getRiderAccount(token = '') {
     return this._roleRest('rider', '/api/v1/rider/account', {
       method: 'GET',
