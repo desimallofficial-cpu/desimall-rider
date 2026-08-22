@@ -5,6 +5,8 @@ const RiderDashboard = {
   geoWatchId: null,
   geoOrder: null,
   lastGeoPushAt: 0,
+  gpsStartedByUser: false,
+  lastLocationAt: 0,
 
   init() {
     try {
@@ -23,6 +25,7 @@ const RiderDashboard = {
     ].filter(Boolean).join(' · ') || 'Delivery Partner';
 
     refreshBtn.onclick = () => this.load();
+    startGpsBtn.onclick = () => this.startLiveLocation(true);
     logoutBtn.onclick = () => this.logout();
     searchInput.oninput = () => this.render();
     statusFilter.onchange = () => this.render();
@@ -92,6 +95,39 @@ const RiderDashboard = {
       : '<div class="r-empty">Abhi koi assigned delivery nahi hai.</div>';
   },
 
+  mapUrl(lat, lon, address='') {
+    if (Number.isFinite(Number(lat)) && Number.isFinite(Number(lon))) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${Number(lat)},${Number(lon)}`)}`;
+    }
+    if (address) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    return '';
+  },
+
+  routeBlock(o) {
+    const status=String(o.RiderStatus||'').toLowerCase();
+    const picked=/picked up|on the way|reached customer|delivered/.test(status);
+    const stops=Array.isArray(o.PickupStops)?o.PickupStops:[];
+
+    if(!picked){
+      const cards=stops.map(s=>{
+        const url=this.mapUrl(s.Latitude,s.Longitude,s.Address);
+        return `<div class="r-route-card pickup">
+          <div><small>PICKUP LOCATION</small><strong>${this.esc(s.ShopName||'Seller')}</strong><p>${this.esc(s.Address||'Pickup address')}</p></div>
+          ${url?`<a class="r-map-btn" target="_blank" rel="noopener" href="${url}"><i class="fa-solid fa-location-arrow"></i> Seller Map</a>`:'<span class="r-route-missing">Seller GPS not saved</span>'}
+        </div>`;
+      }).join('');
+      return cards?`<div class="r-route-panel">${cards}</div>`:'';
+    }
+
+    const customerUrl=this.mapUrl(o.CustomerLatitude,o.CustomerLongitude,o.DeliveryAddress);
+    return `<div class="r-route-panel">
+      <div class="r-route-card delivery">
+        <div><small>DELIVERY LOCATION</small><strong>${this.esc(o.CustomerName||'Customer')}</strong><p>${this.esc(o.DeliveryAddress||'')}</p></div>
+        ${customerUrl?`<a class="r-map-btn" target="_blank" rel="noopener" href="${customerUrl}"><i class="fa-solid fa-location-arrow"></i> Customer Map</a>`:'<span class="r-route-missing">Customer map location unavailable</span>'}
+      </div>
+    </div>`;
+  },
+
   card(o) {
     const items = (o.Items || [])
       .map(i => `${this.esc(i.ProductName)} × ${Number(i.Qty || 0)}`)
@@ -109,7 +145,13 @@ const RiderDashboard = {
       ${o.IsTez ? `<div class="r-tez-target">
         <i class="fa-solid fa-bolt"></i>
         Fast delivery target ${Number(o.DeliveryTargetMinMinutes || 0)}–${Number(o.DeliveryTargetMaxMinutes || 0)} min
+      </div>
+      <div class="r-gps-order-note">
+        <i class="fa-solid fa-location-dot"></i>
+        Customer live map tabhi chalega jab upar <b>Start Live Location</b> ON ho.
       </div>` : ''}
+
+      ${this.routeBlock(o)}
 
       <div class="r-order-body">
         <div>
@@ -149,10 +191,41 @@ const RiderDashboard = {
         return b('Customer तक पहुँच गए', 'Reached Customer', 'success');
 
       case 'reached customer':
-        return b('Delivered', 'Delivered', 'success');
+        return `<div class="r-otp-delivery">
+          <input inputmode="numeric" maxlength="6" id="otp_${this.esc(id)}" placeholder="6-digit customer OTP">
+          <button class="r-btn success" onclick="RiderDashboard.deliverWithOtp('${this.esc(id)}')">
+            <i class="fa-solid fa-shield-halved"></i> Verify OTP & Deliver
+          </button>
+        </div>`;
 
       default:
         return '<span class="r-status">अभी कोई action नहीं</span>';
+    }
+  },
+
+  async deliverWithOtp(id) {
+    const input=document.getElementById(`otp_${id}`);
+    const otp=String(input?.value||'').replace(/\D/g,'').slice(0,6);
+
+    if(otp.length!==6){
+      alert('Customer se 6-digit delivery OTP lekar enter karein.');
+      input?.focus();
+      return;
+    }
+
+    if(!confirm(`${id} ko OTP verify karke Delivered mark karein?`))return;
+
+    try{
+      const r=await DesiMallAPI.updateRiderOrderStatus(
+        id,
+        'Delivered',
+        this.session.token||'',
+        {DeliveryOTP:otp}
+      );
+      alert(r.message||'Delivered');
+      if(r.success)await this.load();
+    }catch(error){
+      alert(error?.message||'Wrong / invalid delivery OTP.');
     }
   },
 
@@ -177,37 +250,123 @@ const RiderDashboard = {
   currentTrackableTezOrder() {
     return this.orders.find(o => {
       const status = String(o.RiderStatus || '').toLowerCase();
-      return o.IsTez && /pickup assigned|pickup accepted|picked up|on the way|reached customer/.test(status);
+      const isTez =
+        o.IsTez === true ||
+        String(o.FulfillmentMode || '').toLowerCase() === 'tez';
+
+      return isTez &&
+        /pickup assigned|pickup accepted|picked up|on the way|reached customer/.test(status);
     }) || null;
+  },
+
+  setGpsStatus(message, state = '') {
+    const box = document.getElementById('gpsStatus');
+    const text = document.getElementById('gpsStatusText');
+    if (text) text.textContent = message;
+    if (box) {
+      box.classList.remove('live', 'error');
+      if (state) box.classList.add(state);
+    }
   },
 
   syncLiveTracking() {
     const order = this.currentTrackableTezOrder();
+    this.geoOrder = order || null;
 
     if (!order) {
-      this.geoOrder = null;
       if (this.geoWatchId !== null && navigator.geolocation) {
         navigator.geolocation.clearWatch(this.geoWatchId);
         this.geoWatchId = null;
       }
+      this.setGpsStatus('No active Tez delivery');
+      if (typeof startGpsBtn !== 'undefined') {
+        startGpsBtn.disabled = true;
+        startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> No Tez delivery';
+      }
+      return;
+    }
+
+    if (typeof startGpsBtn !== 'undefined') {
+      startGpsBtn.disabled = false;
+      startGpsBtn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Start Live Location';
+    }
+
+    // If permission was already granted earlier, restart automatically.
+    if (navigator.permissions?.query) {
+      navigator.permissions.query({ name: 'geolocation' }).then(result => {
+        if (result.state === 'granted' && this.geoWatchId === null) {
+          this.startLiveLocation(false);
+        } else if (result.state === 'denied') {
+          this.setGpsStatus('Location permission blocked', 'error');
+        } else if (this.geoWatchId === null) {
+          this.setGpsStatus('Tap Start Live Location');
+        }
+      }).catch(() => {
+        if (this.geoWatchId === null) this.setGpsStatus('Tap Start Live Location');
+      });
+    } else if (this.geoWatchId === null) {
+      this.setGpsStatus('Tap Start Live Location');
+    }
+  },
+
+  startLiveLocation(userInitiated = false) {
+    const order = this.currentTrackableTezOrder();
+
+    if (!order) {
+      this.setGpsStatus('No active Tez delivery', 'error');
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      this.setGpsStatus('GPS not supported on this device', 'error');
       return;
     }
 
     this.geoOrder = order;
-    if (!navigator.geolocation || this.geoWatchId !== null) return;
+    this.gpsStartedByUser = this.gpsStartedByUser || userInitiated;
+
+    if (this.geoWatchId !== null) {
+      this.setGpsStatus('Live location is on', 'live');
+      return;
+    }
+
+    this.setGpsStatus('Requesting location permission…');
 
     this.geoWatchId = navigator.geolocation.watchPosition(
       pos => this.pushLiveLocation(pos),
-      err => console.warn('Rider GPS unavailable:', err?.message || err),
-      { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+      err => {
+        if (this.geoWatchId !== null) {
+          navigator.geolocation.clearWatch(this.geoWatchId);
+          this.geoWatchId = null;
+        }
+
+        const code = Number(err?.code || 0);
+        if (code === 1) {
+          this.setGpsStatus('Location permission denied', 'error');
+        } else if (code === 2) {
+          this.setGpsStatus('GPS location unavailable', 'error');
+        } else if (code === 3) {
+          this.setGpsStatus('GPS timed out — tap Start again', 'error');
+        } else {
+          this.setGpsStatus(err?.message || 'Could not start live location', 'error');
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 3000,
+        timeout: 20000
+      }
     );
   },
 
   async pushLiveLocation(position) {
     if (!this.geoOrder || !position?.coords) return;
+
     const now = Date.now();
-    if (now - this.lastGeoPushAt < 8000) return;
+    if (now - this.lastGeoPushAt < 6000) return;
     this.lastGeoPushAt = now;
+
+    this.setGpsStatus('Sending live location…');
 
     try {
       await DesiMallAPI.updateRiderLiveLocation({
@@ -219,8 +378,16 @@ const RiderDashboard = {
         Speed: position.coords.speed,
         CapturedAt: new Date(position.timestamp || Date.now()).toISOString()
       }, this.session.token || '');
+
+      this.lastLocationAt = Date.now();
+      this.setGpsStatus('Live location is on', 'live');
+
+      if (typeof startGpsBtn !== 'undefined') {
+        startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> Location Live';
+      }
     } catch (error) {
       console.warn('Live location push failed:', error?.message || error);
+      this.setGpsStatus(error?.message || 'Location upload failed', 'error');
     }
   },
 
