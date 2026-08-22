@@ -39,7 +39,16 @@
         <h1>Rider Dashboard</h1>
         <p>Pickup se delivery tak sirf assigned kaam yahan milega.</p>
       </div>
-      <button class="r-btn secondary" id="refreshBtn">Refresh</button>
+      <div class="r-head-actions">
+        <div class="r-gps-status" id="gpsStatus">
+          <span class="r-gps-dot"></span>
+          <span id="gpsStatusText">Live location off</span>
+        </div>
+        <button class="r-btn gps-btn" id="startGpsBtn" type="button">
+          <i class="fa-solid fa-location-crosshairs"></i> Start Live Location
+        </button>
+        <button class="r-btn secondary" id="refreshBtn">Refresh</button>
+      </div>
     </header>
 
     <section class="r-stats">
@@ -70,6 +79,6 @@
 </div>
 
 <script src="../js/api.js"></script>
-<script src="../js/rider-dashboard.js?v=0.27.0"></script>
+<script src="../js/rider-dashboard.js?v=0.29.9"></script>
 </body>
 </html>
