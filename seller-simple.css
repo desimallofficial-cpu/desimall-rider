@@ -1,0 +1,89 @@
+
+/* DesiMall Seller Simple UI v1
+   Theme colors remain unchanged. This layer only reduces visual clutter. */
+
+body.seller-simple-ui .panel-main{max-width:1500px;margin:0 auto;width:100%}
+body.seller-simple-ui .panel-topbar{margin-bottom:14px}
+body.seller-simple-ui .panel-topbar h1{font-size:32px}
+body.seller-simple-ui .panel-topbar p{font-size:15px;max-width:760px}
+body.seller-simple-ui .seller-page-identity{margin-bottom:14px;padding:15px 18px}
+body.seller-simple-ui .seller-page-identity strong{font-size:18px}
+body.seller-simple-ui .seller-page-identity span{font-size:13px}
+
+.seller-simple-guide{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;background:linear-gradient(110deg,#163725,#4d2d1d);border:1px solid #496448;border-radius:17px;padding:18px 20px;margin:0 0 16px;box-shadow:var(--dm-shadow)}
+.seller-simple-guide h2{margin:0 0 5px;font-size:21px}.seller-simple-guide p{margin:0;color:#d5e5d8}
+.seller-simple-guide .guide-actions{display:flex;gap:9px;flex-wrap:wrap}
+.seller-simple-guide .guide-primary{background:var(--dm-orange);border:1px solid var(--dm-orange);color:#fff;padding:11px 16px;border-radius:11px;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.seller-simple-guide .guide-secondary{background:#253b2d;border:1px solid #4c6652;color:#fff;padding:11px 14px;border-radius:11px;font-weight:800;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+
+.seller-simple-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.seller-simple-step{display:flex;gap:11px;align-items:center;background:#17271e;border:1px solid #34503d;border-radius:14px;padding:13px 14px}
+.seller-simple-step .num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#fff1de;color:#d95c00;font-weight:900}
+.seller-simple-step strong,.seller-simple-step span{display:block}.seller-simple-step span{font-size:12px;color:var(--dm-muted);margin-top:2px}
+
+body.seller-simple-ui .stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+body.seller-simple-ui .stats-grid .stat-card{padding:14px;border-radius:14px;box-shadow:none}
+body.seller-simple-ui .stats-grid .stat-card strong{font-size:24px}
+body.seller-simple-ui .stats-grid .stat-card:nth-child(n+5){display:none}
+body.seller-simple-ui.show-extra-stats .stats-grid .stat-card:nth-child(n+5){display:flex}
+.seller-stat-toggle{margin:-4px 0 14px;display:flex;justify-content:flex-end}
+.seller-stat-toggle button{background:transparent;border:0;color:#ffc185;font-weight:800;cursor:pointer}
+
+body.seller-simple-ui .panel-card,
+body.seller-simple-ui .panel,
+body.seller-simple-ui .hisab-hero{box-shadow:none;border-radius:15px;padding:17px}
+body.seller-simple-ui .card-head,
+body.seller-simple-ui .panel-head{margin-bottom:12px}
+body.seller-simple-ui .card-head h2,
+body.seller-simple-ui .panel-head h2{font-size:20px}
+body.seller-simple-ui .muted{font-size:13px}
+body.seller-simple-ui .data-table th,
+body.seller-simple-ui .data-table td,
+body.seller-simple-ui .hisab-table th,
+body.seller-simple-ui .hisab-table td{padding:11px}
+body.seller-simple-ui .table-wrap{border:1px solid #304b39;background:#122019}
+body.seller-simple-ui .data-table th,
+body.seller-simple-ui .hisab-table th{position:sticky;top:0;z-index:1}
+
+body.seller-simple-ui .inventory-summary-grid{grid-template-columns:repeat(4,1fr);gap:9px}
+body.seller-simple-ui .inventory-summary-grid article{padding:12px}
+body.seller-simple-ui .inventory-summary-grid strong{font-size:22px}
+
+body.seller-simple-ui .hisab-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+body.seller-simple-ui .hisab-card{padding:14px;box-shadow:none}
+body.seller-simple-ui .hisab-card strong{font-size:23px}
+
+.seller-help-line{display:flex;gap:10px;align-items:flex-start;background:#102c1d;border:1px solid #2f6442;border-radius:13px;padding:12px 14px;margin-bottom:14px;color:#d8e8dc}
+.seller-help-line i{color:#ff9f1c;margin-top:2px}.seller-help-line strong{display:block}.seller-help-line span{display:block;font-size:12px;color:#acc4b2;margin-top:3px}
+
+body.seller-simple-ui .panel-nav a{font-size:15px;padding:11px 12px}
+body.seller-simple-ui .panel-nav a .nav-short{display:block;font-size:10px;font-weight:500;color:#a9bcae;margin-left:auto}
+body.seller-simple-ui .panel-sidebar{padding-top:18px}
+
+body.seller-simple-ui .seller-profile-form{grid-template-columns:190px 1fr;gap:18px}
+body.seller-simple-ui .seller-profile-fields{gap:11px}
+body.seller-simple-ui .field label{font-size:13px}
+body.seller-simple-ui input,
+body.seller-simple-ui select,
+body.seller-simple-ui textarea{padding:10px!important}
+
+body.seller-simple-ui .support-stats .stat-card:nth-child(n+4){display:none}
+body.seller-simple-ui .return-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.seller-simple-ui .return-grid .return-card:nth-child(n+5){display:none}
+
+@media(max-width:1100px){
+ .seller-simple-guide{grid-template-columns:1fr}
+ .seller-simple-steps{grid-template-columns:1fr}
+ body.seller-simple-ui .stats-grid{grid-template-columns:repeat(2,1fr)}
+ body.seller-simple-ui .hisab-cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+ .seller-simple-guide{padding:15px}
+ .seller-simple-guide .guide-actions{width:100%}
+ .seller-simple-guide .guide-primary,.seller-simple-guide .guide-secondary{flex:1}
+ body.seller-simple-ui .seller-profile-form{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+ body.seller-simple-ui .stats-grid,
+ body.seller-simple-ui .hisab-cards{grid-template-columns:1fr}
+}

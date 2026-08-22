@@ -1,0 +1,25 @@
+/* Seller Product Module V2 — keeps the locked DesiMall theme */
+.spv2-modal .modal-box{width:min(1040px,96vw);max-height:92vh;padding:0;overflow:hidden;border-radius:20px;background:#13251a;border:1px solid #3b5c45}
+.spv2-modal .modal-head{padding:18px 22px;border-bottom:1px solid #365440;background:#173020;position:sticky;top:0;z-index:5}
+.spv2-shell{display:grid;grid-template-columns:220px 1fr;min-height:620px}
+.spv2-side{padding:18px 14px;background:#0e1e15;border-right:1px solid #31503a}
+.spv2-step{display:flex;gap:10px;align-items:center;padding:11px;border-radius:12px;color:#9fb4a4;margin-bottom:8px;cursor:pointer}
+.spv2-step .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#213829;font-weight:900}
+.spv2-step.active{background:#6a321f;color:#fff}.spv2-step.done .n{background:#165f36;color:#c8f4d5}
+.spv2-main{padding:20px 22px;overflow:auto;max-height:78vh}
+.spv2-pane{display:none}.spv2-pane.active{display:block}
+.spv2-pane h3{margin:0 0 5px;font-size:22px}.spv2-pane>p{margin:0 0 17px;color:#adc1b1}
+.spv2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.spv2-field{display:grid;gap:7px}.spv2-field.full{grid-column:1/-1}.spv2-field label{font-weight:800;color:#edf6ef}.spv2-field small{color:#9eb3a3}
+.spv2-field input,.spv2-field select,.spv2-field textarea{width:100%;box-sizing:border-box;padding:12px 13px;border-radius:11px;border:1px solid #405d49;background:#101d2d;color:#fff}
+.spv2-field.invalid input,.spv2-field.invalid select,.spv2-field.invalid textarea{border-color:#ef5968;box-shadow:0 0 0 2px #ef596822}.spv2-error{color:#ff9ba5;font-size:11px;display:none}.spv2-field.invalid .spv2-error{display:block}
+.spv2-category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.spv2-category{border:1px solid #3b5945;background:#182d20;color:#fff;padding:15px 10px;border-radius:13px;text-align:center;cursor:pointer}.spv2-category i{display:block;font-size:23px;color:#ff7a00;margin-bottom:8px}.spv2-category.active{border-color:#ff7a00;background:#60301f}
+.spv2-upload{border:2px dashed #4d6c56;border-radius:15px;padding:18px;display:grid;grid-template-columns:1fr 140px;gap:15px;align-items:center;cursor:pointer;background:#10251a}.spv2-upload img{width:140px;height:130px;object-fit:contain;border-radius:12px;background:#fff}.spv2-upload strong,.spv2-upload span{display:block}.spv2-upload span{color:#a9bdad;margin-top:5px}
+.spv2-price{background:#0f1c2b;border:1px solid #3b4e67;border-radius:15px;padding:15px}.spv2-price-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2b3e54}.spv2-price-row:last-child{border:0;font-size:18px;color:#ffbd79}.spv2-warning{padding:10px;border-radius:10px;margin-top:10px;background:#6e4218;color:#ffe1aa}.spv2-warning.good{background:#164b2b;color:#c9f3d5}.spv2-warning.bad{background:#6a222a;color:#ffd4d8}
+.spv2-extra{display:none}.spv2-extra.active{display:grid}
+.spv2-preview-card{display:grid;grid-template-columns:180px 1fr;gap:20px;background:#172a1e;border:1px solid #3d5a45;border-radius:16px;padding:18px}.spv2-preview-card img{width:180px;height:180px;object-fit:contain;border-radius:13px;background:#fff}.spv2-preview-card h3{font-size:26px}.spv2-preview-price{font-size:25px;color:#ff9d35;font-weight:900}.spv2-preview-meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.spv2-chip{padding:6px 9px;border-radius:999px;background:#24402e;color:#d4ead8;font-size:11px}
+.spv2-footer{display:flex;justify-content:space-between;gap:10px;padding:15px 22px;border-top:1px solid #365440;background:#112219;position:sticky;bottom:0}.spv2-footer .right{display:flex;gap:9px}.spv2-save-state{color:#9fb5a4;display:flex;align-items:center;gap:7px;font-size:12px}
+.spv2-hidden{display:none!important}
+.product-health{display:flex;align-items:center;gap:7px;margin-top:5px}.product-health-bar{width:60px;height:6px;background:#26374b;border-radius:99px;overflow:hidden}.product-health-bar span{display:block;height:100%;background:#36b96b}.product-health small{font-size:10px;color:#aebed2}
+@media(max-width:850px){.spv2-shell{grid-template-columns:1fr}.spv2-side{display:flex;overflow:auto;border-right:0;border-bottom:1px solid #31503a}.spv2-step{min-width:140px}.spv2-category-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.spv2-grid{grid-template-columns:1fr}.spv2-category-grid{grid-template-columns:1fr 1fr}.spv2-upload{grid-template-columns:1fr}.spv2-preview-card{grid-template-columns:1fr}.spv2-preview-card img{width:100%;height:220px}}
