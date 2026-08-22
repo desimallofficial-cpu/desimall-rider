@@ -28,3 +28,103 @@
   .r-gps-status{flex:1}
   .gps-btn{flex:1}
 }
+
+.r-route-panel{display:grid;gap:10px;margin:12px 0}.r-route-card{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 14px;border:1px solid #30435a;border-radius:12px;background:#101b28}
+.r-route-card small{display:block;color:#ff7a1a;font-size:9px;font-weight:900;letter-spacing:.09em}.r-route-card strong{display:block;margin:3px 0}.r-route-card p{margin:0;color:#9fb2c8;font-size:11px}
+.r-map-btn{white-space:nowrap;text-decoration:none;padding:10px 12px;border-radius:9px;background:#ff6b00;color:#fff;font-weight:900;font-size:11px;cursor:pointer}.r-route-missing{font-size:10px;color:#fda4af}
+.r-otp-delivery{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.r-otp-delivery input{height:40px;min-width:180px;padding:0 12px;border:1px solid #3a4b61;border-radius:9px;background:#101923;color:#fff;font-weight:800;letter-spacing:.08em}.r-otp-delivery button{cursor:pointer}
+@media(max-width:650px){.r-route-card{align-items:stretch;flex-direction:column}.r-map-btn{text-align:center}.r-otp-delivery input,.r-otp-delivery button{width:100%}}
+
+/* Pickup / delivery routing v0.30.8 */
+.r-route-card{box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.r-route-card.pickup{border-color:rgba(255,107,0,.45);background:linear-gradient(135deg,rgba(255,107,0,.08),#101b28 46%)}
+.r-route-card.delivery{border-color:rgba(18,183,106,.35);background:linear-gradient(135deg,rgba(18,183,106,.07),#101b28 46%)}
+.r-route-card.warning{border-color:#5d6b7d;background:#101923}
+.r-route-copy{min-width:0;flex:1}
+.r-route-quality{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900}
+.r-route-quality.precise{background:rgba(18,183,106,.12);color:#86efac;border:1px solid rgba(18,183,106,.25)}
+.r-route-quality.address{background:rgba(245,158,11,.10);color:#fcd34d;border:1px solid rgba(245,158,11,.22)}
+.r-map-btn{transition:transform .12s ease,filter .12s ease;cursor:pointer!important}
+.r-map-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+
+/* ===== Rider delivery OTP UI v0.31.6 ===== */
+.r-delivery-otp-card{
+  width:100%;
+  display:grid;
+  gap:12px;
+  padding:15px;
+  border:1px solid rgba(255,107,0,.4);
+  background:linear-gradient(135deg,rgba(255,107,0,.08),rgba(15,23,42,.55));
+  border-radius:14px;
+}
+.r-delivery-otp-copy{
+  display:grid;
+  gap:4px;
+}
+.r-delivery-otp-kicker{
+  color:#fb923c;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.r-delivery-otp-copy strong{
+  font-size:16px;
+  color:#fff;
+}
+.r-delivery-otp-copy small{
+  color:#9fb0c7;
+  line-height:1.45;
+}
+.r-otp-delivery{
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+.r-otp-input{
+  min-height:46px;
+  border-radius:10px;
+  border:1px solid #40516b;
+  background:#0f1a27;
+  color:#fff;
+  padding:0 14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.18em;
+  outline:none;
+}
+.r-otp-input:focus{
+  border-color:#ff6b00;
+  box-shadow:0 0 0 3px rgba(255,107,0,.12);
+}
+.r-otp-submit{
+  min-height:46px;
+  cursor:pointer!important;
+}
+.r-otp-submit:disabled{
+  opacity:.65;
+  cursor:not-allowed!important;
+}
+.r-otp-message{
+  min-height:18px;
+  font-size:11px;
+  font-weight:800;
+}
+.r-otp-message.error{color:#fca5a5}
+.r-otp-message.success{color:#86efac}
+.r-otp-message.info{color:#93c5fd}
+@media(max-width:700px){
+  .r-otp-delivery{grid-template-columns:1fr}
+}
+#dmRiderBuildBadge{
+  position:fixed;
+  right:10px;
+  bottom:10px;
+  z-index:99999;
+  background:#111827;
+  color:#94a3b8;
+  border:1px solid #334155;
+  border-radius:999px;
+  padding:5px 9px;
+  font:700 10px/1.2 Arial,sans-serif;
+}
