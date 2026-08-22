@@ -109,21 +109,68 @@ const RiderDashboard = {
     const stops=Array.isArray(o.PickupStops)?o.PickupStops:[];
 
     if(!picked){
+      if(!stops.length){
+        return `<div class="r-route-panel">
+          <div class="r-route-card pickup warning">
+            <div>
+              <small>PICKUP LOCATION</small>
+              <strong>Seller pickup location loading…</strong>
+              <p>Refresh once. If this remains, seller pickup data is not available from backend.</p>
+            </div>
+          </div>
+        </div>`;
+      }
+
       const cards=stops.map(s=>{
+        const hasGps=Number.isFinite(Number(s.Latitude))&&Number.isFinite(Number(s.Longitude));
         const url=this.mapUrl(s.Latitude,s.Longitude,s.Address);
+
         return `<div class="r-route-card pickup">
-          <div><small>PICKUP LOCATION</small><strong>${this.esc(s.ShopName||'Seller')}</strong><p>${this.esc(s.Address||'Pickup address')}</p></div>
-          ${url?`<a class="r-map-btn" target="_blank" rel="noopener" href="${url}"><i class="fa-solid fa-location-arrow"></i> Seller Map</a>`:'<span class="r-route-missing">Seller GPS not saved</span>'}
+          <div class="r-route-copy">
+            <small>PICKUP LOCATION</small>
+            <strong>${this.esc(s.ShopName||'Seller')}</strong>
+            <p>${this.esc(s.Address|| (hasGps ? 'Precise shop GPS saved' : 'Seller address not available'))}</p>
+            <span class="r-route-quality ${hasGps?'precise':'address'}">
+              <i class="fa-solid ${hasGps?'fa-location-dot':'fa-map'}"></i>
+              ${hasGps?'Precise shop GPS':'Address-based navigation'}
+            </span>
+          </div>
+          ${url
+            ? `<a class="r-map-btn" target="_blank" rel="noopener" href="${url}">
+                <i class="fa-solid fa-route"></i> Navigate to Seller
+              </a>`
+            : `<span class="r-route-missing">Seller pickup location not set</span>`}
         </div>`;
       }).join('');
-      return cards?`<div class="r-route-panel">${cards}</div>`:'';
+
+      return `<div class="r-route-panel">${cards}</div>`;
     }
 
-    const customerUrl=this.mapUrl(o.CustomerLatitude,o.CustomerLongitude,o.DeliveryAddress);
+    const customerUrl=this.mapUrl(
+      o.CustomerLatitude,
+      o.CustomerLongitude,
+      o.DeliveryAddress
+    );
+    const hasCustomerGps=
+      Number.isFinite(Number(o.CustomerLatitude)) &&
+      Number.isFinite(Number(o.CustomerLongitude));
+
     return `<div class="r-route-panel">
       <div class="r-route-card delivery">
-        <div><small>DELIVERY LOCATION</small><strong>${this.esc(o.CustomerName||'Customer')}</strong><p>${this.esc(o.DeliveryAddress||'')}</p></div>
-        ${customerUrl?`<a class="r-map-btn" target="_blank" rel="noopener" href="${customerUrl}"><i class="fa-solid fa-location-arrow"></i> Customer Map</a>`:'<span class="r-route-missing">Customer map location unavailable</span>'}
+        <div class="r-route-copy">
+          <small>DELIVERY LOCATION</small>
+          <strong>${this.esc(o.CustomerName||'Customer')}</strong>
+          <p>${this.esc(o.DeliveryAddress||'')}</p>
+          <span class="r-route-quality ${hasCustomerGps?'precise':'address'}">
+            <i class="fa-solid ${hasCustomerGps?'fa-location-dot':'fa-map'}"></i>
+            ${hasCustomerGps?'Precise customer GPS':'Address-based navigation'}
+          </span>
+        </div>
+        ${customerUrl
+          ? `<a class="r-map-btn" target="_blank" rel="noopener" href="${customerUrl}">
+              <i class="fa-solid fa-route"></i> Navigate to Customer
+            </a>`
+          : `<span class="r-route-missing">Customer delivery location unavailable</span>`}
       </div>
     </div>`;
   },
