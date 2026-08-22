@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rider Dashboard - DesiMall</title>
+  <link rel="stylesheet" href="../css/rider.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style id="riderTezV027">
+.r-tez-tag{display:inline-flex;align-items:center;gap:4px;margin-left:6px;padding:4px 7px;border-radius:999px;background:#ff6500;color:#fff;font-size:8px;font-weight:900}
+.r-tez-target{margin:8px 0;padding:8px 10px;border:1px solid rgba(255,101,0,.3);border-radius:9px;background:rgba(255,101,0,.1);color:#ffb47c;font-size:9px;font-weight:800}
+</style>
+
+</head>
+
+<body>
+<div class="r-shell">
+  <aside class="r-side">
+    <div class="r-brand">Desi<span>Mall</span></div>
+
+    <div class="r-user">
+      <strong id="riderName">Rider</strong>
+      <small id="riderMeta">Delivery Partner</small>
+    </div>
+
+    <nav class="r-nav">
+      <a class="active" href="dashboard.html">Deliveries</a>
+      <a href="returns.html">Return Pickups</a>
+      <a href="earnings.html">Rider Account</a>
+      <a href="support.html">Support</a>
+      <button id="logoutBtn">Logout</button>
+    </nav>
+  </aside>
+
+  <main class="r-main">
+    <header class="r-head">
+      <div>
+        <h1>Rider Dashboard</h1>
+        <p>Pickup se delivery tak sirf assigned kaam yahan milega.</p>
+      </div>
+      <button class="r-btn secondary" id="refreshBtn">Refresh</button>
+    </header>
+
+    <section class="r-stats">
+      <article class="r-stat"><span>Total assigned</span><strong id="totalCount">0</strong></article>
+      <article class="r-stat"><span>Pickup pending</span><strong id="pickupCount">0</strong></article>
+      <article class="r-stat"><span>On the way</span><strong id="wayCount">0</strong></article>
+      <article class="r-stat"><span>Delivered</span><strong id="deliveredCount">0</strong></article>
+    </section>
+
+    <section class="r-panel">
+      <div class="r-toolbar">
+        <input id="searchInput" placeholder="Search order or customer">
+
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option>Pickup Assigned</option>
+          <option>Pickup Accepted</option>
+          <option>Picked Up</option>
+          <option>On the Way</option>
+          <option>Reached Customer</option>
+          <option>Delivered</option>
+        </select>
+      </div>
+
+      <div id="orders" class="r-orders"></div>
+    </section>
+  </main>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/rider-dashboard.js?v=0.27.0"></script>
+</body>
+</html>

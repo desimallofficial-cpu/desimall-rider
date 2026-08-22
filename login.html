@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1017">
+  <title>Rider Login - DesiMall</title>
+  <link rel="stylesheet" href="../css/rider.css">
+  <style>
+    :root{
+      --bg:#0b1017;
+      --panel:#0f1925;
+      --panel2:#142238;
+      --line:#2b3b50;
+      --text:#f6f8fb;
+      --muted:#98abc1;
+      --orange:#ff6b00;
+      --green:#42d39a;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+    body.rider-pro-login{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:minmax(320px,.85fr) minmax(440px,1.15fr);
+      background:var(--bg);
+    }
+    .rider-login-visual{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding:44px;
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(145deg,#0e1722,#152337);
+      border-right:1px solid #24344a;
+    }
+    .rider-login-visual:after{
+      content:"";
+      position:absolute;
+      width:390px;height:390px;border-radius:50%;
+      right:-180px;bottom:-180px;
+      background:rgba(255,107,0,.11);
+      pointer-events:none;
+    }
+    .login-brand{
+      position:relative;z-index:1;
+      font-size:25px;font-weight:900;
+    }
+    .login-brand span{color:var(--orange)}
+    .rider-login-copy{position:relative;z-index:1;max-width:570px}
+    .rider-login-copy small{
+      color:#ff7b1a;font-weight:900;font-size:12px;letter-spacing:.055em;text-transform:uppercase;
+    }
+    .rider-login-copy h2{
+      margin:18px 0 16px;
+      font-size:52px;line-height:1.1;letter-spacing:-.045em;font-weight:900;color:#fff;
+    }
+    .rider-login-copy p{color:#9fb2c8;font-size:15px;line-height:1.65}
+    .rider-login-points{display:grid;gap:12px;margin-top:26px;color:#cad6e5;font-size:13px}
+    .rider-login-points span:before{content:"●";color:var(--green);margin-right:10px;font-size:12px}
+    .visual-footer{position:relative;z-index:1;color:#748aa4;font-size:13px}
+
+    .rider-login-form-zone{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:36px;
+      background:#0b1017;
+    }
+    .r-auth{
+      width:min(470px,100%);
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      border-radius:0!important;
+      box-shadow:none!important;
+      background:transparent!important;
+      color:#fff!important;
+    }
+    .r-auth h1{
+      margin:0 0 7px;
+      font-size:30px;line-height:1.15;letter-spacing:-.035em;color:#fff;
+    }
+    .r-auth>p{margin:0 0 22px;color:var(--muted);font-size:13px}
+    .r-tabs{
+      display:flex!important;
+      margin:0 0 22px!important;
+      padding:3px!important;
+      border:1px solid #2a3b50!important;
+      border-radius:10px!important;
+      background:#111b27!important;
+    }
+    .r-tabs button{
+      flex:1;border:0!important;border-radius:8px!important;padding:11px!important;
+      background:transparent!important;color:#8fa0b5!important;font-weight:800!important;
+      cursor:pointer;
+    }
+    .r-tabs button.active{background:#1c2a3d!important;color:#fff!important}
+    .r-form{display:grid!important;gap:14px!important}
+    .r-form.hidden{display:none!important}
+    .r-form label{display:block!important;color:#bbc8d7!important;font-size:11px!important;font-weight:800!important}
+    .r-form input,.r-form select{
+      width:100%!important;
+      margin-top:6px!important;
+      padding:12px!important;
+      border:1px solid #304158!important;
+      border-radius:9px!important;
+      background:#101923!important;
+      color:#fff!important;
+      -webkit-text-fill-color:#fff!important;
+      font:inherit!important;
+      outline:none!important;
+    }
+    .r-form input:focus,.r-form select:focus{
+      border-color:var(--orange)!important;
+      box-shadow:0 0 0 3px rgba(255,107,0,.14)!important;
+    }
+    .password-wrap{position:relative;margin-top:6px}
+    .password-wrap input{margin-top:0!important;padding-right:52px!important}
+    .password-toggle{
+      position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      border:0;background:transparent;color:#aebdd0;padding:7px 8px;cursor:pointer;
+      font-size:12px;font-weight:800;
+    }
+    .login-tools{
+      display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:-4px;
+      color:#9bb0c8;font-size:12px;
+    }
+    .remember-row{display:flex;align-items:center;gap:7px}
+    .remember-row input{width:auto!important;margin:0!important;accent-color:var(--orange)}
+    .link-btn{
+      border:0;background:transparent;color:#ff8b3b;padding:0;cursor:pointer;font-weight:800;font-size:12px;
+    }
+    .r-btn{
+      width:100%!important;min-height:44px!important;
+      border:0!important;border-radius:9px!important;
+      background:var(--orange)!important;color:#fff!important;font-weight:850!important;
+      cursor:pointer;
+    }
+    .r-btn:disabled{opacity:.65;cursor:not-allowed}
+    .r-msg{min-height:21px!important;margin-top:2px!important;color:#ff8e8e!important;font-size:13px!important;font-weight:750!important}
+    .r-msg.good{color:var(--green)!important}
+    .rider-help{
+      display:flex;justify-content:space-between;gap:12px;align-items:center;
+      margin-top:18px;color:#7f91a9;font-size:13px;
+    }
+    .rider-help a{color:#ff8b3b;text-decoration:none;font-weight:750}
+    .forgot-note{
+      display:none;
+      margin-top:12px;padding:12px 13px;border:1px solid #304158;border-radius:9px;
+      background:#111b27;color:#c4d0de;font-size:12px;line-height:1.55;
+    }
+    .forgot-note.show{display:block}
+    .forgot-note strong{color:#fff}
+    .forgot-note a{color:#ff8b3b;text-decoration:none;font-weight:800}
+
+    @media(max-width:850px){
+      body.rider-pro-login{grid-template-columns:1fr}
+      .rider-login-visual{min-height:auto;padding:26px 24px}
+      .rider-login-copy,.visual-footer{display:none}
+      .rider-login-form-zone{min-height:calc(100vh - 80px);padding:30px 20px}
+    }
+  </style>
+</head>
+
+<body class="rider-pro-login">
+  <section class="rider-login-visual" aria-label="DesiMall Rider">
+    <div class="login-brand">Desi<span>Mall</span> Rider</div>
+
+    <div class="rider-login-copy">
+      <small>Rider Center</small>
+      <h2>Your delivery work, in one focused workspace.</h2>
+      <p>Assigned orders, pickup, delivery status, COD and earnings — sab ek clean Rider workspace me.</p>
+      <div class="rider-login-points">
+        <span>Assigned delivery tasks</span>
+        <span>Clear pickup → delivery workflow</span>
+        <span>COD and earnings visibility</span>
+      </div>
+    </div>
+
+    <div class="visual-footer">DesiMall Rider Center</div>
+  </section>
+
+  <section class="rider-login-form-zone">
+    <main class="r-auth">
+      <h1>Rider Account</h1>
+      <p>Login to manage your assigned delivery work.</p>
+
+      <div class="r-tabs">
+        <button id="loginTab" class="active" type="button">Login</button>
+        <button id="registerTab" type="button">Register</button>
+      </div>
+
+      <form id="loginForm" class="r-form">
+        <label>Mobile number or email
+          <input id="identifier" autocomplete="username" required>
+        </label>
+
+        <label>Password
+          <div class="password-wrap">
+            <input id="password" type="password" autocomplete="current-password" required>
+            <button id="showLoginPassword" class="password-toggle" type="button" aria-label="Show password">Show</button>
+          </div>
+        </label>
+
+        <div class="login-tools">
+          <label class="remember-row"><input id="rememberRider" type="checkbox"> Remember me</label>
+          <button id="forgotPasswordBtn" class="link-btn" type="button">Forgot password?</button>
+        </div>
+
+        <button class="r-btn" type="submit">Login</button>
+
+        <div id="forgotPasswordNote" class="forgot-note">
+          <strong>Password reset:</strong> testing phase me Rider password reset Admin/Support se handle hoga.
+          Contact: <a href="mailto:desimall.official@gmail.com">desimall.official@gmail.com</a>
+        </div>
+      </form>
+
+      <form id="registerForm" class="r-form hidden">
+        <label>Full name<input id="rName" autocomplete="name" required></label>
+        <label>Mobile<input id="rMobile" maxlength="10" inputmode="numeric" required></label>
+        <label>Email<input id="rEmail" type="email" autocomplete="email" required></label>
+
+        <label>Vehicle type
+          <select id="rVehicle">
+            <option>Bike</option>
+            <option>Scooter</option>
+            <option>Cycle</option>
+            <option>Auto</option>
+          </select>
+        </label>
+
+        <label>Vehicle number<input id="rVehicleNo"></label>
+        <label>Service pincode<input id="rPincode" maxlength="6" inputmode="numeric"></label>
+        <label>Password
+          <div class="password-wrap">
+            <input id="rPassword" type="password" minlength="6" autocomplete="new-password" required>
+            <button id="showRegisterPassword" class="password-toggle" type="button" aria-label="Show password">Show</button>
+          </div>
+        </label>
+
+        <button class="r-btn" type="submit">Register rider</button>
+      </form>
+
+      <div id="msg" class="r-msg"></div>
+
+      <div class="rider-help">
+        <span>Admin approval is required for new riders.</span>
+        <a href="mailto:desimall.official@gmail.com">Need help?</a>
+      </div>
+    </main>
+  </section>
+
+<script src="../js/api.js"></script>
+<script src="../js/rider-auth.js"></script>
+</body>
+</html>
