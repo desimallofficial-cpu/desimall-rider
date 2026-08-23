@@ -46,3 +46,169 @@
 .r-route-quality.address{background:rgba(245,158,11,.10);color:#fcd34d;border:1px solid rgba(245,158,11,.22)}
 .r-map-btn{transition:transform .12s ease,filter .12s ease;cursor:pointer!important}
 .r-map-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+
+/* ===== Rider delivery OTP UI v0.31.6 ===== */
+.r-delivery-otp-card{
+  width:100%;
+  display:grid;
+  gap:12px;
+  padding:15px;
+  border:1px solid rgba(255,107,0,.4);
+  background:linear-gradient(135deg,rgba(255,107,0,.08),rgba(15,23,42,.55));
+  border-radius:14px;
+}
+.r-delivery-otp-copy{
+  display:grid;
+  gap:4px;
+}
+.r-delivery-otp-kicker{
+  color:#fb923c;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.r-delivery-otp-copy strong{
+  font-size:16px;
+  color:#fff;
+}
+.r-delivery-otp-copy small{
+  color:#9fb0c7;
+  line-height:1.45;
+}
+.r-otp-delivery{
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) auto;
+  gap:10px;
+  align-items:center;
+}
+.r-otp-input{
+  min-height:46px;
+  border-radius:10px;
+  border:1px solid #40516b;
+  background:#0f1a27;
+  color:#fff;
+  padding:0 14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.18em;
+  outline:none;
+}
+.r-otp-input:focus{
+  border-color:#ff6b00;
+  box-shadow:0 0 0 3px rgba(255,107,0,.12);
+}
+.r-otp-submit{
+  min-height:46px;
+  cursor:pointer!important;
+}
+.r-otp-submit:disabled{
+  opacity:.65;
+  cursor:not-allowed!important;
+}
+.r-otp-message{
+  min-height:18px;
+  font-size:11px;
+  font-weight:800;
+}
+.r-otp-message.error{color:#fca5a5}
+.r-otp-message.success{color:#86efac}
+.r-otp-message.info{color:#93c5fd}
+@media(max-width:700px){
+  .r-otp-delivery{grid-template-columns:1fr}
+}
+#dmRiderBuildBadge{
+  position:fixed;
+  right:10px;
+  bottom:10px;
+  z-index:99999;
+  background:#111827;
+  color:#94a3b8;
+  border:1px solid #334155;
+  border-radius:999px;
+  padding:5px 9px;
+  font:700 10px/1.2 Arial,sans-serif;
+}
+
+/* ===== Universal location buttons v0.31.7 ===== */
+.r-route-universal{
+  display:grid;
+  gap:12px;
+  border:1px solid #2a4058;
+  background:#0f1b28;
+  border-radius:14px;
+  padding:14px;
+}
+.r-route-heading{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-end;
+}
+.r-route-heading small{
+  color:#ff7a18;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.r-route-heading strong{
+  display:block;
+  color:#fff;
+  margin-top:3px;
+}
+.r-route-heading span{
+  color:#8fa4bd;
+  font-size:10px;
+}
+.r-route-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.r-route-buttons .r-map-btn{
+  cursor:pointer!important;
+  flex:1 1 210px;
+  justify-content:center;
+}
+.r-route-buttons .pickup-btn{
+  background:#ff6b00;
+  color:#fff;
+}
+.r-route-buttons .customer-btn{
+  background:#16a34a;
+  color:#fff;
+}
+.r-route-buttons .missing{
+  opacity:.5;
+  cursor:not-allowed!important;
+}
+.r-route-detail{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.r-route-detail>div{
+  border:1px solid #273a50;
+  border-radius:10px;
+  padding:10px;
+  background:#111e2c;
+}
+.r-route-detail small{
+  color:#91a6bf;
+  font-size:8px;
+  font-weight:900;
+}
+.r-route-detail strong{
+  display:block;
+  margin:3px 0;
+  color:#fff;
+}
+.r-route-detail p{
+  margin:0;
+  color:#9fb0c7;
+  font-size:10px;
+}
+@media(max-width:700px){
+  .r-route-heading{display:block}
+  .r-route-heading span{display:block;margin-top:5px}
+  .r-route-detail{grid-template-columns:1fr}
+}
