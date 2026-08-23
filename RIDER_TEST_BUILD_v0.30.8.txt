@@ -1,0 +1,10 @@
+DESIMALL RIDER v0.30.8 — PICKUP ROUTE FIX
+
+Fix:
+- Backend now returns seller PickupStops to Rider.
+- Rider sees Seller Pickup Location before "Picked Up".
+- Navigation uses precise seller GPS if saved.
+- If precise GPS is not saved, Google Maps opens using seller address as fallback.
+- After pickup, Rider sees Customer Delivery Location.
+- Customer latitude/longitude are returned when saved on delivery address.
+- Existing live GPS / OTP / Delivered workflow remains unchanged.
