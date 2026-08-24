@@ -105,73 +105,99 @@ const RiderDashboard = {
   },
 
   routeBlock(o) {
-    const status=String(o.RiderStatus||'').toLowerCase();
-    const picked=/picked up|on the way|reached customer|delivered/.test(status);
+    const rawMode=String(o.FulfillmentMode||'marketplace').trim().toLowerCase();
+    const mode=['try-on','try_on','tryon'].includes(rawMode)
+      ? 'try_on'
+      : (['services','service'].includes(rawMode)
+          ? 'service'
+          : (rawMode==='food' ? 'food' : (rawMode==='tez' ? 'tez' : 'marketplace')));
+
     const stops=Array.isArray(o.PickupStops)?o.PickupStops:[];
+    const pickup=stops[0]||null;
 
-    if(!picked){
-      if(!stops.length){
-        return `<div class="r-route-panel">
-          <div class="r-route-card pickup warning">
-            <div>
-              <small>PICKUP LOCATION</small>
-              <strong>Seller pickup location loading…</strong>
-              <p>Refresh once. If this remains, seller pickup data is not available from backend.</p>
-            </div>
-          </div>
-        </div>`;
-      }
+    const pickupLabel=
+      mode==='food'
+        ? 'Restaurant Location'
+        : mode==='try_on'
+          ? 'Seller Location'
+          : mode==='service'
+            ? ''
+            : 'Seller Location';
 
-      const cards=stops.map(s=>{
-        const hasGps=Number.isFinite(Number(s.Latitude))&&Number.isFinite(Number(s.Longitude));
-        const url=this.mapUrl(s.Latitude,s.Longitude,s.Address);
+    const pickupTitle=
+      mode==='food'
+        ? (pickup?.ShopName||'Restaurant')
+        : mode==='try_on'
+          ? (pickup?.ShopName||'Try-On Pickup Seller')
+          : (pickup?.ShopName||'Seller');
 
-        return `<div class="r-route-card pickup">
-          <div class="r-route-copy">
-            <small>PICKUP LOCATION</small>
-            <strong>${this.esc(s.ShopName||'Seller')}</strong>
-            <p>${this.esc(s.Address|| (hasGps ? 'Precise shop GPS saved' : 'Seller address not available'))}</p>
-            <span class="r-route-quality ${hasGps?'precise':'address'}">
-              <i class="fa-solid ${hasGps?'fa-location-dot':'fa-map'}"></i>
-              ${hasGps?'Precise shop GPS':'Address-based navigation'}
-            </span>
-          </div>
-          ${url
-            ? `<a class="r-map-btn" target="_blank" rel="noopener" href="${url}">
-                <i class="fa-solid fa-route"></i> Navigate to Seller
-              </a>`
-            : `<span class="r-route-missing">Seller pickup location not set</span>`}
-        </div>`;
-      }).join('');
-
-      return `<div class="r-route-panel">${cards}</div>`;
-    }
+    const pickupUrl=pickup
+      ? this.mapUrl(pickup.Latitude,pickup.Longitude,pickup.Address)
+      : '';
 
     const customerUrl=this.mapUrl(
       o.CustomerLatitude,
       o.CustomerLongitude,
       o.DeliveryAddress
     );
-    const hasCustomerGps=
-      Number.isFinite(Number(o.CustomerLatitude)) &&
-      Number.isFinite(Number(o.CustomerLongitude));
 
-    return `<div class="r-route-panel">
-      <div class="r-route-card delivery">
-        <div class="r-route-copy">
-          <small>DELIVERY LOCATION</small>
-          <strong>${this.esc(o.CustomerName||'Customer')}</strong>
-          <p>${this.esc(o.DeliveryAddress||'')}</p>
-          <span class="r-route-quality ${hasCustomerGps?'precise':'address'}">
-            <i class="fa-solid ${hasCustomerGps?'fa-location-dot':'fa-map'}"></i>
-            ${hasCustomerGps?'Precise customer GPS':'Address-based navigation'}
-          </span>
+    const roleLabel=
+      mode==='food'
+        ? 'Food Delivery'
+        : mode==='service'
+          ? 'Service Visit'
+          : mode==='try_on'
+            ? 'Try-On Visit'
+            : mode==='tez'
+              ? 'Tez Delivery'
+              : 'DesiMall Delivery';
+
+    return `<div class="r-route-panel r-route-universal">
+      <div class="r-route-heading">
+        <div>
+          <small>${roleLabel.toUpperCase()}</small>
+          <strong>Location shortcuts</strong>
         </div>
+        <span>Order ke hisaab se sahi location open karein.</span>
+      </div>
+
+      <div class="r-route-buttons">
+        ${mode!=='service' ? `
+          ${pickupUrl
+            ? `<a class="r-map-btn pickup-btn" target="_blank" rel="noopener" href="${pickupUrl}">
+                <i class="fa-solid ${mode==='food'?'fa-utensils':'fa-store'}"></i>
+                ${pickupLabel}
+              </a>`
+            : `<button class="r-map-btn pickup-btn missing" type="button" disabled>
+                <i class="fa-solid fa-location-dot"></i>
+                ${pickupLabel} unavailable
+              </button>`}
+        ` : ''}
+
         ${customerUrl
-          ? `<a class="r-map-btn" target="_blank" rel="noopener" href="${customerUrl}">
-              <i class="fa-solid fa-route"></i> Navigate to Customer
+          ? `<a class="r-map-btn customer-btn" target="_blank" rel="noopener" href="${customerUrl}">
+              <i class="fa-solid fa-house"></i>
+              Customer Location
             </a>`
-          : `<span class="r-route-missing">Customer delivery location unavailable</span>`}
+          : `<button class="r-map-btn customer-btn missing" type="button" disabled>
+              <i class="fa-solid fa-location-dot"></i>
+              Customer Location unavailable
+            </button>`}
+      </div>
+
+      <div class="r-route-detail">
+        ${mode!=='service' ? `
+          <div>
+            <small>${pickupLabel||'Pickup'}</small>
+            <strong>${this.esc(pickupTitle)}</strong>
+            <p>${this.esc(pickup?.Address||'Pickup address not saved')}</p>
+          </div>
+        ` : ''}
+        <div>
+          <small>CUSTOMER</small>
+          <strong>${this.esc(o.CustomerName||'Customer')}</strong>
+          <p>${this.esc(o.DeliveryAddress||'Customer address not saved')}</p>
+        </div>
       </div>
     </div>`;
   },
@@ -221,19 +247,34 @@ const RiderDashboard = {
     </article>`;
   },
 
-  actions(id, status) {
+  actions(id, status, fulfillmentMode='marketplace') {
+    const rawMode=String(fulfillmentMode||'marketplace').toLowerCase();
+    const mode=['try-on','try_on','tryon'].includes(rawMode)
+      ? 'try_on'
+      : (['services','service'].includes(rawMode)
+          ? 'service'
+          : (rawMode==='food' ? 'food' : (rawMode==='tez' ? 'tez' : 'marketplace')));
+
     const b = (label, next, cls = '') =>
       `<button class="r-btn ${cls}" onclick="RiderDashboard.update('${this.esc(id)}','${next}')">${label}</button>`;
 
     switch (String(status || '').toLowerCase()) {
       case 'pickup assigned':
-        return b('Pickup स्वीकार करें', 'Pickup Accepted');
+        return mode==='service'
+          ? b('Service Job स्वीकार करें', 'Pickup Accepted')
+          : b(mode==='food' ? 'Restaurant Pickup स्वीकार करें' : 'Pickup स्वीकार करें', 'Pickup Accepted');
 
       case 'pickup accepted':
-        return b('सामान ले लिया', 'Picked Up', 'success');
+        return mode==='service'
+          ? b('Customer के लिए निकलें', 'On the Way', 'success')
+          : b(mode==='food' ? 'Order ले लिया' : 'सामान ले लिया', 'Picked Up', 'success');
 
       case 'picked up':
-        return b('Delivery शुरू करें', 'On the Way', 'success');
+        return b(
+          mode==='try_on' ? 'Try-On Visit शुरू करें' : 'Delivery शुरू करें',
+          'On the Way',
+          'success'
+        );
 
       case 'on the way':
         return b('Customer तक पहुँच गए', 'Reached Customer', 'success');
@@ -243,10 +284,14 @@ const RiderDashboard = {
           <div class="r-delivery-otp-card">
             <div class="r-delivery-otp-copy">
               <span class="r-delivery-otp-kicker">
-                <i class="fa-solid fa-shield-halved"></i> DELIVERY VERIFICATION
+                <i class="fa-solid fa-shield-halved"></i> OTP VERIFICATION REQUIRED
               </span>
               <strong>Customer से 6-digit OTP लें</strong>
-              <small>सही OTP verify होने के बाद ही order Delivered होगा.</small>
+              <small>
+                सही OTP verify होने के बाद ही
+                ${mode==='service' ? 'service Completed' : 'order Delivered'}
+                होगा.
+              </small>
             </div>
 
             <div class="r-otp-delivery">
@@ -266,7 +311,7 @@ const RiderDashboard = {
                 onclick="RiderDashboard.deliverWithOtp('${this.esc(id)}')"
               >
                 <i class="fa-solid fa-circle-check"></i>
-                Verify OTP & Deliver
+                ${mode==='service' ? 'Verify OTP & Complete' : 'Verify OTP & Deliver'}
               </button>
             </div>
 
