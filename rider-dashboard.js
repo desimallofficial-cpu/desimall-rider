@@ -392,11 +392,12 @@ const RiderDashboard = {
   currentTrackableTezOrder() {
     return this.orders.find(o => {
       const status = String(o.RiderStatus || '').toLowerCase();
-      const isTez =
+      const rawMode = String(o.FulfillmentMode || '').toLowerCase();
+      const mapMode =
         o.IsTez === true ||
-        String(o.FulfillmentMode || '').toLowerCase() === 'tez';
+        ['tez','food','service','services','try-on','try_on','tryon'].includes(rawMode);
 
-      return isTez &&
+      return mapMode &&
         /pickup assigned|pickup accepted|picked up|on the way|reached customer/.test(status);
     }) || null;
   },
@@ -472,10 +473,20 @@ const RiderDashboard = {
       return;
     }
 
-    this.setGpsStatus('Requesting location permission…');
+    this.setGpsStatus('Requesting precise GPS…');
+
+    navigator.geolocation.getCurrentPosition(
+      pos => this.pushLiveLocation(pos, true),
+      () => {},
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 20000
+      }
+    );
 
     this.geoWatchId = navigator.geolocation.watchPosition(
-      pos => this.pushLiveLocation(pos),
+      pos => this.pushLiveLocation(pos, false),
       err => {
         if (this.geoWatchId !== null) {
           navigator.geolocation.clearWatch(this.geoWatchId);
@@ -501,11 +512,18 @@ const RiderDashboard = {
     );
   },
 
-  async pushLiveLocation(position) {
+  async pushLiveLocation(position, force = false) {
     if (!this.geoOrder || !position?.coords) return;
 
     const now = Date.now();
-    if (now - this.lastGeoPushAt < 6000) return;
+    if (!force && now - this.lastGeoPushAt < 5000) return;
+
+    const accuracy = Number(position.coords.accuracy);
+    if (Number.isFinite(accuracy) && accuracy > 1500) {
+      this.setGpsStatus(`GPS weak (${Math.round(accuracy)}m). Turn on Precise Location.`, 'error');
+      return;
+    }
+
     this.lastGeoPushAt = now;
 
     this.setGpsStatus('Sending live location…');
@@ -522,7 +540,15 @@ const RiderDashboard = {
       }, this.session.token || '');
 
       this.lastLocationAt = Date.now();
-      this.setGpsStatus('Live location is on', 'live');
+
+      const lat = Number(position.coords.latitude);
+      const lon = Number(position.coords.longitude);
+      const accuracy = Number(position.coords.accuracy);
+
+      this.setGpsStatus(
+        `Live GPS ${lat.toFixed(5)}, ${lon.toFixed(5)} · ±${Math.round(accuracy || 0)}m`,
+        'live'
+      );
 
       if (typeof startGpsBtn !== 'undefined') {
         startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> Location Live';
