@@ -128,3 +128,87 @@
   padding:5px 9px;
   font:700 10px/1.2 Arial,sans-serif;
 }
+
+/* ===== Universal location buttons v0.31.7 ===== */
+.r-route-universal{
+  display:grid;
+  gap:12px;
+  border:1px solid #2a4058;
+  background:#0f1b28;
+  border-radius:14px;
+  padding:14px;
+}
+.r-route-heading{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-end;
+}
+.r-route-heading small{
+  color:#ff7a18;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.r-route-heading strong{
+  display:block;
+  color:#fff;
+  margin-top:3px;
+}
+.r-route-heading span{
+  color:#8fa4bd;
+  font-size:10px;
+}
+.r-route-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.r-route-buttons .r-map-btn{
+  cursor:pointer!important;
+  flex:1 1 210px;
+  justify-content:center;
+}
+.r-route-buttons .pickup-btn{
+  background:#ff6b00;
+  color:#fff;
+}
+.r-route-buttons .customer-btn{
+  background:#16a34a;
+  color:#fff;
+}
+.r-route-buttons .missing{
+  opacity:.5;
+  cursor:not-allowed!important;
+}
+.r-route-detail{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.r-route-detail>div{
+  border:1px solid #273a50;
+  border-radius:10px;
+  padding:10px;
+  background:#111e2c;
+}
+.r-route-detail small{
+  color:#91a6bf;
+  font-size:8px;
+  font-weight:900;
+}
+.r-route-detail strong{
+  display:block;
+  margin:3px 0;
+  color:#fff;
+}
+.r-route-detail p{
+  margin:0;
+  color:#9fb0c7;
+  font-size:10px;
+}
+@media(max-width:700px){
+  .r-route-heading{display:block}
+  .r-route-heading span{display:block;margin-top:5px}
+  .r-route-detail{grid-template-columns:1fr}
+}
