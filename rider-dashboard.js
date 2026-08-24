@@ -8,6 +8,13 @@ const RiderDashboard = {
   lastGeoPushAt: 0,
   gpsStartedByUser: false,
   lastLocationAt: 0,
+  inAppMap: null,
+  inAppRiderMarker: null,
+  inAppTargetMarker: null,
+  inAppRouteLine: null,
+  inAppRouteCoords: [],
+  currentMapTarget: null,
+  currentRiderPosition: null,
 
   init() {
     try {
@@ -104,6 +111,203 @@ const RiderDashboard = {
     return '';
   },
 
+
+  validCoordinate(lat, lon) {
+    const a=Number(lat), b=Number(lon);
+    return Number.isFinite(a) && Number.isFinite(b) &&
+      Math.abs(a) <= 90 && Math.abs(b) <= 180 &&
+      !(Math.abs(a) < 0.0001 && Math.abs(b) < 0.0001);
+  },
+
+  openInAppMap(kind, title, address, lat, lon) {
+    const targetLat=Number(lat);
+    const targetLon=Number(lon);
+
+    if (!this.validCoordinate(targetLat,targetLon)) {
+      alert(`${kind} ka exact GPS save nahi hai. Pehle us location ka latitude/longitude save karein.`);
+      return;
+    }
+
+    this.currentMapTarget={
+      kind:String(kind||'Location'),
+      title:String(title||kind||'Location'),
+      address:String(address||''),
+      latitude:targetLat,
+      longitude:targetLon
+    };
+
+    const modal=document.getElementById('riderMapModal');
+    const titleEl=document.getElementById('riderMapTitle');
+    const eyebrow=document.getElementById('riderMapEyebrow');
+    const addressEl=document.getElementById('riderMapAddress');
+
+    if(titleEl)titleEl.textContent=this.currentMapTarget.title;
+    if(eyebrow)eyebrow.textContent=String(kind||'Location').toUpperCase();
+    if(addressEl)addressEl.textContent=this.currentMapTarget.address || `${targetLat.toFixed(6)}, ${targetLon.toFixed(6)}`;
+
+    modal?.classList.remove('hidden');
+    modal?.setAttribute('aria-hidden','false');
+    document.body.classList.add('r-map-open');
+
+    setTimeout(()=>{
+      this.ensureInAppMap();
+      this.updateInAppRoute();
+    },50);
+  },
+
+  closeInAppMap() {
+    const modal=document.getElementById('riderMapModal');
+    modal?.classList.add('hidden');
+    modal?.setAttribute('aria-hidden','true');
+    document.body.classList.remove('r-map-open');
+  },
+
+  ensureInAppMap() {
+    if(this.inAppMap){
+      setTimeout(()=>this.inAppMap.invalidateSize(),20);
+      return this.inAppMap;
+    }
+
+    if(typeof L==='undefined')return null;
+    const el=document.getElementById('riderInAppMap');
+    if(!el)return null;
+
+    this.inAppMap=L.map(el,{zoomControl:true}).setView([25.30,84.86],14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:19,
+      attribution:'© OpenStreetMap contributors'
+    }).addTo(this.inAppMap);
+
+    return this.inAppMap;
+  },
+
+  async updateInAppRoute() {
+    const map=this.ensureInAppMap();
+    const target=this.currentMapTarget;
+    if(!map||!target)return;
+
+    const tLat=Number(target.latitude);
+    const tLon=Number(target.longitude);
+
+    if(this.inAppTargetMarker){
+      this.inAppTargetMarker.setLatLng([tLat,tLon]);
+    }else{
+      this.inAppTargetMarker=L.marker([tLat,tLon],{
+        title:target.title
+      }).addTo(map).bindPopup(`<strong>${this.esc(target.title)}</strong><br>${this.esc(target.address||'')}`);
+    }
+
+    let rider=this.currentRiderPosition;
+
+    if(!rider && navigator.geolocation){
+      try{
+        const pos=await new Promise((resolve,reject)=>{
+          navigator.geolocation.getCurrentPosition(resolve,reject,{
+            enableHighAccuracy:true,
+            maximumAge:0,
+            timeout:15000
+          });
+        });
+        rider={
+          latitude:Number(pos.coords.latitude),
+          longitude:Number(pos.coords.longitude),
+          accuracy:Number(pos.coords.accuracy)
+        };
+        this.currentRiderPosition=rider;
+      }catch(_){}
+    }
+
+    const gpsStatus=document.getElementById('riderMapGpsStatus');
+    if(!rider || !this.validCoordinate(rider.latitude,rider.longitude)){
+      if(gpsStatus)gpsStatus.textContent='Turn on precise location to show route';
+      map.setView([tLat,tLon],16);
+      return;
+    }
+
+    if(gpsStatus)gpsStatus.textContent=`GPS ±${Math.round(rider.accuracy||0)}m`;
+
+    const rLat=Number(rider.latitude);
+    const rLon=Number(rider.longitude);
+
+    const bikeIcon=L.divIcon({
+      className:'rider-bike-marker-wrap',
+      html:'<div class="rider-bike-marker"><i class="fa-solid fa-motorcycle"></i></div>',
+      iconSize:[42,42],
+      iconAnchor:[21,21]
+    });
+
+    if(this.inAppRiderMarker){
+      this.inAppRiderMarker.setLatLng([rLat,rLon]);
+    }else{
+      this.inAppRiderMarker=L.marker([rLat,rLon],{icon:bikeIcon}).addTo(map).bindPopup('Your live location');
+    }
+
+    const fallbackLine=[[rLat,rLon],[tLat,tLon]];
+
+    try{
+      const url=`https://router.project-osrm.org/route/v1/driving/${rLon},${rLat};${tLon},${tLat}?overview=full&geometries=geojson&steps=false`;
+      const response=await fetch(url,{cache:'no-store'});
+      if(!response.ok)throw new Error('route unavailable');
+      const data=await response.json();
+      const route=data?.routes?.[0];
+      if(!route?.geometry?.coordinates?.length)throw new Error('route unavailable');
+
+      const coords=route.geometry.coordinates.map(([lon,lat])=>[lat,lon]);
+      this.inAppRouteCoords=coords;
+
+      if(this.inAppRouteLine){
+        this.inAppRouteLine.setLatLngs(coords);
+      }else{
+        this.inAppRouteLine=L.polyline(coords,{
+          weight:6,
+          opacity:.9,
+          lineCap:'round',
+          lineJoin:'round'
+        }).addTo(map);
+      }
+
+      const distance=document.getElementById('riderMapDistance');
+      const km=Number(route.distance||0)/1000;
+      const min=Math.max(1,Math.ceil(Number(route.duration||0)/60));
+      if(distance)distance.textContent=`${km<1?Math.round(km*1000)+' m':km.toFixed(1)+' km'} · about ${min} min`;
+
+      map.fitBounds(this.inAppRouteLine.getBounds(),{padding:[40,40],maxZoom:17});
+    }catch(error){
+      if(this.inAppRouteLine){
+        this.inAppRouteLine.setLatLngs(fallbackLine);
+      }else{
+        this.inAppRouteLine=L.polyline(fallbackLine,{
+          weight:5,
+          opacity:.75,
+          dashArray:'8 8'
+        }).addTo(map);
+      }
+      const distance=document.getElementById('riderMapDistance');
+      if(distance)distance.textContent='Road route temporarily unavailable';
+      map.fitBounds(this.inAppRouteLine.getBounds(),{padding:[40,40],maxZoom:17});
+    }
+  },
+
+  centerOnRider() {
+    if(this.inAppMap && this.currentRiderPosition){
+      this.inAppMap.setView([
+        Number(this.currentRiderPosition.latitude),
+        Number(this.currentRiderPosition.longitude)
+      ],17);
+    }
+  },
+
+  fitCurrentRoute() {
+    if(this.inAppMap && this.inAppRouteLine){
+      this.inAppMap.fitBounds(this.inAppRouteLine.getBounds(),{padding:[40,40],maxZoom:17});
+    }else if(this.currentMapTarget && this.inAppMap){
+      this.inAppMap.setView([
+        Number(this.currentMapTarget.latitude),
+        Number(this.currentMapTarget.longitude)
+      ],16);
+    }
+  },
+
   routeBlock(o) {
     const rawMode=String(o.FulfillmentMode||'marketplace').trim().toLowerCase();
     const mode=['try-on','try_on','tryon'].includes(rawMode)
@@ -118,85 +322,87 @@ const RiderDashboard = {
     const pickupLabel=
       mode==='food'
         ? 'Restaurant Location'
-        : mode==='try_on'
-          ? 'Seller Location'
-          : mode==='service'
-            ? ''
-            : 'Seller Location';
-
-    const pickupTitle=
-      mode==='food'
-        ? (pickup?.ShopName||'Restaurant')
-        : mode==='try_on'
-          ? (pickup?.ShopName||'Try-On Pickup Seller')
-          : (pickup?.ShopName||'Seller');
-
-    const pickupUrl=pickup
-      ? this.mapUrl(pickup.Latitude,pickup.Longitude,pickup.Address)
-      : '';
-
-    const customerUrl=this.mapUrl(
-      o.CustomerLatitude,
-      o.CustomerLongitude,
-      o.DeliveryAddress
-    );
-
-    const roleLabel=
-      mode==='food'
-        ? 'Food Delivery'
         : mode==='service'
-          ? 'Service Visit'
-          : mode==='try_on'
-            ? 'Try-On Visit'
-            : mode==='tez'
-              ? 'Tez Delivery'
-              : 'DesiMall Delivery';
+          ? ''
+          : 'Seller Location';
+
+    const pickupName=
+      mode==='food'
+        ? (pickup?.ShopName||pickup?.SellerName||'Restaurant')
+        : (pickup?.ShopName||pickup?.SellerName||'Seller');
+
+    const pickupLat=pickup?.Latitude;
+    const pickupLon=pickup?.Longitude;
+    const customerLat=o.CustomerLatitude;
+    const customerLon=o.CustomerLongitude;
+
+    const pickupReady=this.validCoordinate(pickupLat,pickupLon);
+    const customerReady=this.validCoordinate(customerLat,customerLon);
+
+    const button=(kind,title,address,lat,lon,label,cls,icon,ready)=>{
+      if(!ready){
+        return `<button class="r-map-btn ${cls} missing" type="button" disabled title="Exact GPS not saved">
+          <i class="fa-solid fa-triangle-exclamation"></i>${label} GPS missing
+        </button>`;
+      }
+
+      return `<button class="r-map-btn ${cls}" type="button"
+        onclick='RiderDashboard.openInAppMap(${JSON.stringify(kind)},${JSON.stringify(title)},${JSON.stringify(address||"")},${Number(lat)},${Number(lon)})'>
+        <i class="fa-solid ${icon}"></i>${label}
+      </button>`;
+    };
 
     return `<div class="r-route-panel r-route-universal">
       <div class="r-route-heading">
         <div>
-          <small>${roleLabel.toUpperCase()}</small>
-          <strong>Location shortcuts</strong>
+          <small>${mode.toUpperCase()} LOCATION</small>
+          <strong>In-app navigation</strong>
         </div>
-        <span>Order ke hisaab se sahi location open karein.</span>
+        <span>Button click karte hi exact saved location isi app ke map me khulegi.</span>
       </div>
 
       <div class="r-route-buttons">
-        ${mode!=='service' ? `
-          ${pickupUrl
-            ? `<a class="r-map-btn pickup-btn" target="_blank" rel="noopener" href="${pickupUrl}">
-                <i class="fa-solid ${mode==='food'?'fa-utensils':'fa-store'}"></i>
-                ${pickupLabel}
-              </a>`
-            : `<button class="r-map-btn pickup-btn missing" type="button" disabled>
-                <i class="fa-solid fa-location-dot"></i>
-                ${pickupLabel} unavailable
-              </button>`}
-        ` : ''}
+        ${mode!=='service'
+          ? button(
+              pickupLabel,
+              pickupName,
+              pickup?.Address||'',
+              pickupLat,
+              pickupLon,
+              pickupLabel,
+              'pickup-btn',
+              mode==='food'?'fa-utensils':'fa-store',
+              pickupReady
+            )
+          : ''}
 
-        ${customerUrl
-          ? `<a class="r-map-btn customer-btn" target="_blank" rel="noopener" href="${customerUrl}">
-              <i class="fa-solid fa-house"></i>
-              Customer Location
-            </a>`
-          : `<button class="r-map-btn customer-btn missing" type="button" disabled>
-              <i class="fa-solid fa-location-dot"></i>
-              Customer Location unavailable
-            </button>`}
+        ${button(
+          'Customer Location',
+          o.CustomerName||'Customer',
+          o.DeliveryAddress||'',
+          customerLat,
+          customerLon,
+          'Customer Location',
+          'customer-btn',
+          'fa-house',
+          customerReady
+        )}
       </div>
 
       <div class="r-route-detail">
         ${mode!=='service' ? `
           <div>
-            <small>${pickupLabel||'Pickup'}</small>
-            <strong>${this.esc(pickupTitle)}</strong>
+            <small>${pickupLabel}</small>
+            <strong>${this.esc(pickupName)}</strong>
             <p>${this.esc(pickup?.Address||'Pickup address not saved')}</p>
+            <em>${pickupReady ? 'Exact GPS saved' : 'Exact GPS missing'}</em>
           </div>
         ` : ''}
         <div>
           <small>CUSTOMER</small>
           <strong>${this.esc(o.CustomerName||'Customer')}</strong>
           <p>${this.esc(o.DeliveryAddress||'Customer address not saved')}</p>
+          <em>${customerReady ? 'Exact GPS saved' : 'Exact GPS missing'}</em>
         </div>
       </div>
     </div>`;
@@ -544,6 +750,16 @@ const RiderDashboard = {
       const lat = Number(position.coords.latitude);
       const lon = Number(position.coords.longitude);
       const accuracy = Number(position.coords.accuracy);
+
+      this.currentRiderPosition = {
+        latitude: lat,
+        longitude: lon,
+        accuracy
+      };
+
+      if (this.currentMapTarget && document.getElementById('riderMapModal') && !document.getElementById('riderMapModal').classList.contains('hidden')) {
+        this.updateInAppRoute();
+      }
 
       this.setGpsStatus(
         `Live GPS ${lat.toFixed(5)}, ${lon.toFixed(5)} · ±${Math.round(accuracy || 0)}m`,

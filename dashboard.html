@@ -12,9 +12,17 @@
 .r-tez-target{margin:8px 0;padding:8px 10px;border:1px solid rgba(255,101,0,.3);border-radius:9px;background:rgba(255,101,0,.1);color:#ffb47c;font-size:9px;font-weight:800}
 </style>
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 
-<body><div style="position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:999999;background:#2563eb;color:#fff;border-radius:999px;padding:7px 14px;font:800 11px Arial,sans-serif">RIDER GPS CHAIN v0.31.9</div>
+<body>
+<div id="dmRiderCompleteBadge" style="
+position:fixed;left:50%;top:8px;transform:translateX(-50%);
+z-index:999999;background:#2563eb;color:white;border-radius:999px;
+padding:7px 14px;font:800 11px Arial,sans-serif;box-shadow:0 5px 18px rgba(0,0,0,.25)">
+RIDER COMPLETE v0.32.2
+</div>
+<div style="position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:999999;background:#2563eb;color:#fff;border-radius:999px;padding:7px 14px;font:800 11px Arial,sans-serif">RIDER GPS CHAIN v0.32.2</div>
 <div class="r-shell">
   <aside class="r-side">
     <div class="r-brand">Desi<span>Mall</span></div>
@@ -80,6 +88,39 @@
 
 <script src="../js/api.js"></script>
 <script src="../js/rider-dashboard.js?v=0.31.7"></script>
-<div id="dmRiderBuildBadge">Rider v0.31.9 UNIVERSAL</div>
+<div id="dmRiderBuildBadge">Rider v0.32.2 UNIVERSAL</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div id="riderMapModal" class="r-map-modal hidden" aria-hidden="true">
+  <div class="r-map-modal-card">
+    <div class="r-map-modal-head">
+      <div>
+        <small id="riderMapEyebrow">LOCATION</small>
+        <h2 id="riderMapTitle">Navigation</h2>
+        <p id="riderMapAddress"></p>
+      </div>
+      <button type="button" class="r-map-close" onclick="RiderDashboard.closeInAppMap()" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="r-map-statusbar">
+      <span id="riderMapDistance">Calculating route…</span>
+      <span id="riderMapGpsStatus">Waiting for your GPS…</span>
+    </div>
+
+    <div id="riderInAppMap" class="r-inapp-map"></div>
+
+    <div class="r-map-actions">
+      <button type="button" class="r-btn" onclick="RiderDashboard.centerOnRider()">
+        <i class="fa-solid fa-location-crosshairs"></i> My Location
+      </button>
+      <button type="button" class="r-btn success" onclick="RiderDashboard.fitCurrentRoute()">
+        <i class="fa-solid fa-route"></i> Show Full Route
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
