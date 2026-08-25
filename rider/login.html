@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#0b1017">
   <title>Rider Login - DesiMall</title>
-  <link rel="stylesheet" href="../css/rider.css">
+  <link rel="stylesheet" href="../css/rider.css?v=0.32.3">
   <style>
     :root{
       --bg:#0b1017;
@@ -163,6 +163,26 @@
       .rider-login-form-zone{min-height:calc(100vh - 80px);padding:30px 20px}
     }
   </style>
+
+<script id="dmReleaseBootstrap">
+(() => {
+  const RELEASE = 'v0.32.3';
+  window.DESIMALL_RELEASE = RELEASE;
+  try {
+    const prev = localStorage.getItem('desimall_release');
+    if (prev !== RELEASE) {
+      localStorage.setItem('desimall_release', RELEASE);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+      }
+    }
+  } catch (_) {}
+})();
+</script>
+
 </head>
 
 <body class="rider-pro-login">
@@ -253,7 +273,7 @@
     </main>
   </section>
 
-<script src="../js/api.js"></script>
-<script src="../js/rider-auth.js"></script>
+<script src="../js/api.js?v=0.32.3"></script>
+<script src="../js/rider-auth.js?v=0.32.3"></script>
 </body>
 </html>

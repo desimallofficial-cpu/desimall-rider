@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rider Account - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css">
+<link rel="stylesheet" href="../css/rider.css?v=0.32.3">
 <style>
 .money-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px}
 .money-card{background:#18263a;border:1px solid #31445f;border-radius:16px;padding:18px}
@@ -14,6 +14,26 @@
 .account-row:last-child{border-bottom:0}.account-row small{display:block;color:#91a3b9;margin-top:4px}.good-money{color:#6ee7a2}.cod-money{color:#ffb15c}
 @media(max-width:800px){.money-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.account-row{grid-template-columns:1fr}}
 </style>
+
+<script id="dmReleaseBootstrap">
+(() => {
+  const RELEASE = 'v0.32.3';
+  window.DESIMALL_RELEASE = RELEASE;
+  try {
+    const prev = localStorage.getItem('desimall_release');
+    if (prev !== RELEASE) {
+      localStorage.setItem('desimall_release', RELEASE);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+      }
+    }
+  } catch (_) {}
+})();
+</script>
+
 </head>
 <body>
 <div class="r-shell">
@@ -42,7 +62,7 @@
 <section class="r-panel"><div class="r-toolbar"><h2 style="margin:0">Recent Deliveries</h2></div><div id="recentList"></div></section><section class="r-panel" style="margin-top:18px"><div class="r-toolbar"><h2 style="margin:0">Payout History</h2></div><div id="payoutList"></div></section>
 </main>
 </div>
-<script src="../js/api.js"></script>
-<script src="../js/rider-account.js"></script>
+<script src="../js/api.js?v=0.32.3"></script>
+<script src="../js/rider-account.js?v=0.32.3"></script>
 </body>
 </html>

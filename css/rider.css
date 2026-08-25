@@ -212,3 +212,112 @@
   .r-route-heading span{display:block;margin-top:5px}
   .r-route-detail{grid-template-columns:1fr}
 }
+
+/* ===== In-app navigation map v0.32.2 ===== */
+.r-map-open{overflow:hidden}
+.r-map-modal{
+  position:fixed;
+  inset:0;
+  z-index:100000;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:rgba(2,8,23,.78);
+  backdrop-filter:blur(6px);
+}
+.r-map-modal.hidden{display:none!important}
+.r-map-modal-card{
+  width:min(1100px,96vw);
+  height:min(760px,92vh);
+  background:#0c1724;
+  border:1px solid #2a4058;
+  border-radius:18px;
+  overflow:hidden;
+  display:grid;
+  grid-template-rows:auto auto minmax(320px,1fr) auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+.r-map-modal-head{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  padding:16px 18px 10px;
+  background:#101e2d;
+}
+.r-map-modal-head small{
+  color:#ff7a18;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.r-map-modal-head h2{
+  margin:3px 0;
+  color:#fff;
+}
+.r-map-modal-head p{
+  margin:0;
+  color:#9fb0c7;
+}
+.r-map-close{
+  width:42px;height:42px;border:0;border-radius:10px;
+  background:#1e293b;color:#fff;cursor:pointer!important;font-size:18px;
+}
+.r-map-statusbar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 18px;
+  background:#0f1b28;
+  color:#b9c7d9;
+  border-top:1px solid #1f3349;
+  border-bottom:1px solid #1f3349;
+  font-size:11px;
+  font-weight:800;
+}
+.r-inapp-map{
+  width:100%;
+  height:100%;
+  min-height:360px;
+  background:#dbe6ef;
+}
+.r-map-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  padding:12px 18px;
+  background:#101e2d;
+}
+.rider-bike-marker{
+  width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;
+  background:#ff6b00;color:#fff;
+  border:3px solid #fff;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+  font-size:18px;
+}
+.rider-bike-marker-wrap{background:none!important;border:none!important}
+.r-route-detail em{
+  display:inline-block;
+  margin-top:6px;
+  font-size:9px;
+  font-style:normal;
+  font-weight:900;
+  color:#86efac;
+}
+.r-route-buttons button.r-map-btn{
+  border:0;
+}
+@media(max-width:700px){
+  .r-map-modal{padding:0}
+  .r-map-modal-card{
+    width:100vw;height:100vh;border-radius:0;
+  }
+  .r-map-statusbar{display:grid}
+  .r-map-actions{display:grid;grid-template-columns:1fr 1fr}
+}
+
+.gps-order-btn{
+  background:#ff6b00!important;
+  color:#fff!important;
+  border-color:#ff6b00!important;
+}
+.gps-order-btn i{margin-right:6px}
