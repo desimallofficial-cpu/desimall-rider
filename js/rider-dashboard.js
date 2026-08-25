@@ -1,4 +1,4 @@
-window.DESIMALL_RIDER_BUILD='clean-v1.0.1';
+window.DESIMALL_RIDER_BUILD='clean-v1.0.2';
 const RiderDashboard = {
   key: 'desimall_rider_session',
   session: {},
@@ -412,8 +412,9 @@ const RiderDashboard = {
     const items = (o.Items || [])
       .map(i => `${this.esc(i.ProductName)} × ${Number(i.Qty || 0)}`)
       .join(', ');
+    const isDelivered = String(o.RiderStatus || '').trim().toLowerCase() === 'delivered';
 
-    return `<article class="r-order">
+    return `<article class="r-order ${isDelivered ? 'r-order-delivered' : ''}">
       <div class="r-order-head">
         <div>
           <strong>${this.esc(o.OrderID)}</strong>
@@ -422,7 +423,7 @@ const RiderDashboard = {
         <span class="r-status">${this.esc(o.RiderStatus || '')}</span>
       </div>
 
-      ${o.IsTez ? `<div class="r-tez-target">
+      ${o.IsTez && !isDelivered ? `<div class="r-tez-target">
         <i class="fa-solid fa-bolt"></i>
         Fast delivery target ${Number(o.DeliveryTargetMinMinutes || 0)}–${Number(o.DeliveryTargetMaxMinutes || 0)} min
       </div>
@@ -431,7 +432,7 @@ const RiderDashboard = {
         Customer live map tabhi chalega jab upar <b>Start Live Location</b> ON ho.
       </div>` : ''}
 
-      ${this.routeBlock(o)}
+      ${isDelivered ? '' : this.routeBlock(o)}
 
       <div class="r-order-body">
         <div>
@@ -447,10 +448,10 @@ const RiderDashboard = {
         </div>
       </div>
 
-      <div class="r-order-actions">
+      ${isDelivered ? '' : `<div class="r-order-actions">
         ${this.liveGpsAction(o)}
         ${this.actions(o.OrderID, o.RiderStatus, o.FulfillmentMode || (o.IsTez ? 'tez' : 'marketplace'))}
-      </div>
+      </div>`}
     </article>`;
   },
 
