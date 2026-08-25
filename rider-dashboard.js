@@ -1,4 +1,4 @@
-window.DESIMALL_RIDER_BUILD='v0.31.6';
+window.DESIMALL_RIDER_BUILD='clean-v1.0.0';
 const RiderDashboard = {
   key: 'desimall_rider_session',
   session: {},
@@ -627,10 +627,10 @@ const RiderDashboard = {
         navigator.geolocation.clearWatch(this.geoWatchId);
         this.geoWatchId = null;
       }
-      this.setGpsStatus('No active Tez delivery');
+      this.setGpsStatus('No active live-tracking delivery');
       if (typeof startGpsBtn !== 'undefined') {
         startGpsBtn.disabled = true;
-        startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> No Tez delivery';
+        startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> No live delivery';
       }
       return;
     }
@@ -662,7 +662,7 @@ const RiderDashboard = {
     const order = this.currentTrackableTezOrder();
 
     if (!order) {
-      this.setGpsStatus('No active Tez delivery', 'error');
+      this.setGpsStatus('No active live-tracking delivery', 'error');
       return;
     }
 

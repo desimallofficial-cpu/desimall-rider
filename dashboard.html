@@ -4,15 +4,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Rider Dashboard - DesiMall</title>
-  <link rel="stylesheet" href="../css/rider.css?v=0.31.7">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="../css/rider.css?v=1.0.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css?v=1.0.0">
 
 <style id="riderTezV027">
 .r-tez-tag{display:inline-flex;align-items:center;gap:4px;margin-left:6px;padding:4px 7px;border-radius:999px;background:#ff6500;color:#fff;font-size:8px;font-weight:900}
 .r-tez-target{margin:8px 0;padding:8px 10px;border:1px solid rgba(255,101,0,.3);border-radius:9px;background:rgba(255,101,0,.1);color:#ffb47c;font-size:9px;font-weight:800}
 </style>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css?v=1.0.0">
+
+<script id="dmReleaseBootstrap">
+(() => {
+  const RELEASE = 'v0.32.3';
+  window.DESIMALL_RELEASE = RELEASE;
+  try {
+    const prev = localStorage.getItem('desimall_release');
+    if (prev !== RELEASE) {
+      localStorage.setItem('desimall_release', RELEASE);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+      }
+    }
+  } catch (_) {}
+})();
+</script>
+
 </head>
 
 <body>
@@ -20,9 +40,9 @@
 position:fixed;left:50%;top:8px;transform:translateX(-50%);
 z-index:999999;background:#2563eb;color:white;border-radius:999px;
 padding:7px 14px;font:800 11px Arial,sans-serif;box-shadow:0 5px 18px rgba(0,0,0,.25)">
-RIDER COMPLETE v0.32.2
+RIDER COMPLETE v0.32.3
 </div>
-<div style="position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:999999;background:#2563eb;color:#fff;border-radius:999px;padding:7px 14px;font:800 11px Arial,sans-serif">RIDER GPS CHAIN v0.32.2</div>
+
 <div class="r-shell">
   <aside class="r-side">
     <div class="r-brand">Desi<span>Mall</span></div>
@@ -86,10 +106,10 @@ RIDER COMPLETE v0.32.2
   </main>
 </div>
 
-<script src="../js/api.js"></script>
-<script src="../js/rider-dashboard.js?v=0.31.7"></script>
-<div id="dmRiderBuildBadge">Rider v0.32.2 UNIVERSAL</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../js/api.js?v=1.0.0"></script>
+<script src="../js/rider-dashboard.js?v=1.0.0"></script>
+<div id="dmRiderBuildBadge">Rider v0.32.3 UNIVERSAL</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js?v=1.0.0"></script>
 
 <div id="riderMapModal" class="r-map-modal hidden" aria-hidden="true">
   <div class="r-map-modal-card">
@@ -122,5 +142,7 @@ RIDER COMPLETE v0.32.2
   </div>
 </div>
 
+<div style="position:fixed;right:12px;bottom:12px;z-index:999999;background:#111827;color:#e5e7eb;border:1px solid #475569;border-radius:999px;padding:6px 10px;font:800 10px Arial,sans-serif">Rider v0.32.3 LIVE</div>
+<div style="position:fixed;right:12px;bottom:12px;z-index:999999;background:#111827;color:#e5e7eb;border:1px solid #475569;border-radius:999px;padding:6px 10px;font:800 10px Arial">Rider Clean v1.0</div>
 </body>
 </html>

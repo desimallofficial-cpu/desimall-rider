@@ -6,6 +6,26 @@
 <title>DesiMall Rider</title>
 <meta http-equiv="refresh" content="0; url=rider/login.html">
 <script>location.replace('rider/login.html');</script>
+
+<script id="dmReleaseBootstrap">
+(() => {
+  const RELEASE = 'v0.32.3';
+  window.DESIMALL_RELEASE = RELEASE;
+  try {
+    const prev = localStorage.getItem('desimall_release');
+    if (prev !== RELEASE) {
+      localStorage.setItem('desimall_release', RELEASE);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+      }
+    }
+  } catch (_) {}
+})();
+</script>
+
 </head>
 <body></body>
 </html>
