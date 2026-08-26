@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rider Support - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css?v=1.0.4">
-<link rel="stylesheet" href="../css/support.css?v=1.0.4">
+<link rel="stylesheet" href="../css/rider.css?v=1.0.5">
+<link rel="stylesheet" href="../css/support.css?v=1.0.5">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 <div class="r-shell">
@@ -13,11 +14,11 @@
   <div class="r-brand">Desi<span>Mall</span></div>
   <div class="r-user"><strong id="riderName">Rider</strong><small>Delivery Partner</small></div>
   <nav class="r-nav">
-   <a href="dashboard.html">Deliveries</a>
-   <a href="returns.html">Return Pickups</a>
-   <a href="earnings.html">Rider Account</a>
-   <a class="active" href="support.html">Support</a>
-   <button id="logoutBtn">Logout</button>
+   <a  href="dashboard.html"><i class="fa-solid fa-truck-fast"></i> Deliveries</a>
+   <a  href="returns.html"><i class="fa-solid fa-arrow-rotate-left"></i> Return Pickups</a>
+   <a  href="earnings.html"><i class="fa-solid fa-wallet"></i> Rider Account</a>
+   <a class="active"  href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+   <button  id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
   </nav>
  </aside>
 
@@ -53,19 +54,19 @@
      <div class="support-pane-head"><div><h2>My Tickets</h2><small>Latest conversations</small></div></div>
      <div id="riderTicketList" class="ticket-list"></div>
     </aside>
-    <section id="riderTicketDetail" class="support-detail-pane support-empty-pro">
-     <div class="support-empty-icon">?</div>
-     <strong>Select a support ticket</strong>
-     <span>Ticket details and replies will appear here.</span>
-    </section>
+    <section id="riderTicketDetail" class="support-detail-pane support-empty-pro compact-empty">
+ <div class="support-empty-icon"><i class="fa-solid fa-headset"></i></div>
+ <strong>Select a support ticket</strong>
+ <span>Ticket details and replies will appear here.</span>
+</section>
    </div>
   </section>
  </main>
 </div>
 
-<div class="modal" id="riderTicketModal" aria-hidden="true">
- <div class="modal-box rider-support-modal">
-  <div class="modal-head"><div><span class="support-kicker">CREATE REQUEST</span><h2>New Support Ticket</h2></div><button class="close-btn" id="closeRiderTicket" type="button">×</button></div>
+<div class="r-support-modal-backdrop" id="riderTicketModal" aria-hidden="true">
+ <div class="r-support-modal-card" role="dialog" aria-modal="true" aria-labelledby="riderTicketTitle">
+  <div class="modal-head"><div><span class="support-kicker">CREATE REQUEST</span><h2 id="riderTicketTitle">New Support Ticket</h2></div><button class="r-support-modal-close" id="closeRiderTicket" type="button" aria-label="Close">×</button></div>
   <form id="riderTicketForm" class="rider-support-form">
    <label>Category<select id="riderCategory" required><option>Delivery</option><option>COD</option><option>Payout</option><option>Return Pickup</option><option>Account / KYC</option><option>Other</option></select></label>
    <label>Priority<select id="riderPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select></label>
@@ -76,7 +77,7 @@
  </div>
 </div>
 
-<script src="../js/api.js?v=1.0.4"></script>
-<script src="../js/rider-support.js?v=1.0.4"></script>
+<script src="../js/api.js?v=1.0.5"></script>
+<script src="../js/rider-support.js?v=1.0.5"></script>
 </body>
 </html>

@@ -53,3 +53,117 @@
 .close-btn{border:0;background:#273955;color:#fff;width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:23px}
 @media(max-width:1050px){.support-pro-layout{grid-template-columns:1fr}.support-ticket-pane{border-right:0;border-bottom:1px solid var(--r-border)}.ticket-list{max-height:330px}}
 @media(max-width:760px){.support-overview{grid-template-columns:1fr}.support-category-bar,.rider-support-head{align-items:stretch;flex-direction:column}.support-head-actions{width:100%}.support-head-actions .r-btn{flex:1}.support-reply-pro{grid-template-columns:1fr}.rider-support-form{grid-template-columns:1fr}.rider-support-form .full{grid-column:auto}.chat-pro{max-width:94%}}
+
+
+/* ===== v1.0.5 Support modal + consistent navigation polish ===== */
+.r-nav a,
+.r-nav button{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.r-nav a i,
+.r-nav button i{
+  width:18px;
+  text-align:center;
+  flex:0 0 18px;
+}
+
+/* Dedicated modal styles to avoid conflict with legacy .modal rules */
+.r-support-modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:20000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(4,9,16,.78);
+  backdrop-filter:blur(6px);
+}
+.r-support-modal-backdrop.show{
+  display:flex;
+}
+.r-support-modal-card{
+  position:relative;
+  width:min(780px,96vw);
+  max-height:min(90vh,900px);
+  overflow:auto;
+  background:#18263a;
+  color:#fff;
+  border:1px solid #3a4d68;
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 28px 90px rgba(0,0,0,.48);
+}
+.r-support-modal-card .modal-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  padding-bottom:16px;
+  border-bottom:1px solid #31445f;
+}
+.r-support-modal-card .modal-head h2{
+  margin:2px 0 0;
+  font-size:24px;
+}
+.r-support-modal-close{
+  border:0;
+  background:#263854;
+  color:#fff;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+.r-support-modal-close:hover{
+  background:#324a6d;
+}
+.rider-support-form{
+  margin-top:18px;
+}
+.rider-support-form .support-form-actions{
+  padding-top:4px;
+}
+
+/* Compact empty ticket area */
+.support-detail-pane.support-empty-pro.compact-empty{
+  min-height:320px;
+  align-self:start;
+}
+
+/* Better desktop proportions */
+.support-pro-layout{
+  align-items:start;
+}
+.support-detail-pane{
+  min-height:520px;
+}
+
+/* Scrollbar polish */
+.ticket-list::-webkit-scrollbar,
+.support-chat-pro::-webkit-scrollbar,
+.r-support-modal-card::-webkit-scrollbar{
+  width:8px;
+}
+.ticket-list::-webkit-scrollbar-thumb,
+.support-chat-pro::-webkit-scrollbar-thumb,
+.r-support-modal-card::-webkit-scrollbar-thumb{
+  background:#31445f;
+  border-radius:999px;
+}
+
+@media(max-width:760px){
+  .r-support-modal-backdrop{padding:12px}
+  .r-support-modal-card{
+    width:100%;
+    max-height:92vh;
+    border-radius:16px;
+    padding:16px;
+  }
+  .r-support-modal-card .modal-head h2{font-size:21px}
+}

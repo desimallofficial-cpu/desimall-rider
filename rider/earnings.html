@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rider Account - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css?v=1.0.4">
+<link rel="stylesheet" href="../css/rider.css?v=1.0.5">
 <style>
 .money-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px}
 .money-card{background:#18263a;border:1px solid #31445f;border-radius:16px;padding:18px}
@@ -38,6 +38,7 @@
 })();
 </script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 <div class="r-shell">
@@ -45,11 +46,11 @@
 <div class="r-brand">Desi<span>Mall</span></div>
 <div class="r-user"><strong id="riderName">Rider</strong><small>Delivery Partner</small></div>
 <nav class="r-nav">
-<a href="dashboard.html">Deliveries</a>
-<a href="returns.html">Return Pickups</a>
-<a class="active" href="earnings.html">Rider Account</a>
-<a href="support.html">Support</a>
-<button id="logoutBtn">Logout</button>
+<a  href="dashboard.html"><i class="fa-solid fa-truck-fast"></i> Deliveries</a>
+<a  href="returns.html"><i class="fa-solid fa-arrow-rotate-left"></i> Return Pickups</a>
+<a class="active"  href="earnings.html"><i class="fa-solid fa-wallet"></i> Rider Account</a>
+<a  href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
+<button  id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
 </nav>
 </aside>
 <main class="r-main">
@@ -75,7 +76,7 @@
   </div>
 </div>
 
-<script src="../js/api.js?v=1.0.4"></script>
-<script src="../js/rider-account.js?v=1.0.4"></script>
+<script src="../js/api.js?v=1.0.5"></script>
+<script src="../js/rider-account.js?v=1.0.5"></script>
 </body>
 </html>
