@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rider Support - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css?v=1.0.5">
-<link rel="stylesheet" href="../css/support.css?v=1.0.5">
+<link rel="stylesheet" href="../css/rider.css?v=1.0.6">
+<link rel="stylesheet" href="../css/support.css?v=1.0.6">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -72,12 +72,13 @@
    <label>Priority<select id="riderPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select></label>
    <label class="full">Subject<input id="riderSubject" maxlength="120" required placeholder="Short summary of the issue"></label>
    <label class="full">Description<textarea id="riderDescription" rows="6" maxlength="1500" required placeholder="Order ID / Return ID aur problem ki complete detail likhein..."></textarea></label>
-   <div class="full support-form-actions"><button type="button" class="r-btn secondary" id="cancelRiderTicket">Cancel</button><button class="r-btn">Submit Ticket</button></div>
+   <div class="full" id="riderTicketFormMsg" role="status" aria-live="polite"></div>
+<div class="full support-form-actions"><button type="button" class="r-btn secondary" id="cancelRiderTicket">Cancel</button><button type="submit" class="r-btn" id="submitRiderTicket">Submit Ticket</button></div>
   </form>
  </div>
 </div>
 
-<script src="../js/api.js?v=1.0.5"></script>
-<script src="../js/rider-support.js?v=1.0.5"></script>
+<script src="../js/api.js?v=1.0.6"></script>
+<script src="../js/rider-support.js?v=1.0.6"></script>
 </body>
 </html>

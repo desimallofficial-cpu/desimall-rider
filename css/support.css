@@ -167,3 +167,39 @@
   }
   .r-support-modal-card .modal-head h2{font-size:21px}
 }
+
+
+/* Support form submit feedback v1.0.6 */
+.support-form-msg{
+  min-height:0;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.45;
+}
+.support-form-msg:not(:empty){
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid #344760;
+  background:#122034;
+}
+.support-form-msg.loading{
+  color:#cfe2ff;
+  border-color:#355783;
+}
+.support-form-msg.success{
+  color:#b7efc8;
+  background:#143624;
+  border-color:#286443;
+}
+.support-form-msg.error{
+  color:#ffd0d0;
+  background:#401f23;
+  border-color:#7c363e;
+}
+#submitRiderTicket:disabled{
+  opacity:.75;
+  cursor:not-allowed;
+}
