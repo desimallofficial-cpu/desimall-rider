@@ -112,17 +112,20 @@ async open(id,skip=false){
    </div>`).join(''):'<div class="support-no-replies">No replies yet. Support team response will appear here.</div>'}</div>
 
   ${String(t.Status||'').toLowerCase()==='closed'?'':`
-  <form class="support-reply-pro" onsubmit="event.preventDefault();RiderSupport.reply()">
-   <div class="support-reply-compose">
+  <form class="support-reply-pro support-reply-inline" onsubmit="event.preventDefault();RiderSupport.reply()">
+   <div class="support-reply-shell">
     <textarea id="riderReply" maxlength="1000" placeholder="Write a reply..."></textarea>
-    <div class="reply-media-row">
-     <label class="reply-attach-btn"><i class="fa-solid fa-image"></i> Add screenshot
+    <div id="riderReplyPreview" class="reply-inline-preview"></div>
+    <div class="reply-inline-actions">
+     <label class="reply-icon-btn" title="Attach screenshot" aria-label="Attach screenshot">
+      <i class="fa-solid fa-paperclip"></i>
       <input id="riderReplyScreenshot" type="file" accept="image/jpeg,image/png,image/webp" hidden>
      </label>
-     <div id="riderReplyPreview"></div>
+     <button class="reply-send-icon" title="Send reply" aria-label="Send reply">
+      <i class="fa-solid fa-paper-plane"></i>
+     </button>
     </div>
    </div>
-   <button class="r-btn">Send Reply</button>
   </form>`}`;
 
  const replyInput=document.getElementById('riderReplyScreenshot');
@@ -251,9 +254,9 @@ async reply(){
  const message=String(box?.value||'').trim();
  if(!message&&!this.replyFile){alert('Reply message likhein ya screenshot add karein.');return}
 
- const form=box?.closest('form');const btn=form?.querySelector('button.r-btn');
+ const form=box?.closest('form');const btn=form?.querySelector('button.reply-send-icon');
  if(btn?.disabled)return;
- btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+ btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>';
 
  try{
   const media=await this.uploadImage(this.replyFile);
@@ -265,7 +268,7 @@ async reply(){
   this.replyFile=null;
   await this.load();
  }catch(e){alert(e?.message||'Reply failed.')}
- finally{if(document.body.contains(btn)){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Send Reply'}}
+ finally{if(document.body.contains(btn)){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i>'}}
 }
 };
 document.addEventListener('DOMContentLoaded',()=>RiderSupport.init());
