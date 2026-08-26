@@ -357,3 +357,17 @@
 .r-otp-submit:disabled{
   filter:saturate(.35);
 }
+
+/* Rider Account delivery-detail modal v1.0.4 */
+.r-modal{position:fixed;inset:0;background:rgba(4,9,16,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:10000;backdrop-filter:blur(4px)}
+.r-modal.show{display:flex}
+.r-modal-card{position:relative;width:min(760px,100%);max-height:90vh;overflow:auto;background:#18263a;border:1px solid #3b4f6c;border-radius:20px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.r-modal-x{position:absolute;right:16px;top:14px;border:0;background:#263854;color:#fff;width:38px;height:38px;border-radius:10px;font-size:22px;cursor:pointer}
+.r-detail-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding-right:48px}
+.r-detail-head h2{margin:4px 0 0;font-size:25px}.r-detail-eyebrow{color:#ff8b38;font-size:10px;font-weight:900;letter-spacing:.12em}
+.r-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}
+.r-detail-box{background:#122034;border:1px solid #30445f;border-radius:13px;padding:13px}.r-detail-box small{display:block;color:#98aabd;margin-bottom:7px}.r-detail-box strong{font-size:17px}
+.r-detail-section{border-top:1px solid #31445f;padding-top:16px;margin-top:16px}.r-detail-section h3{margin:0 0 10px;font-size:15px}
+.r-detail-line{display:grid;grid-template-columns:minmax(120px,.7fr) 1.4fr;gap:14px;padding:9px 0;border-bottom:1px solid rgba(49,68,95,.55)}.r-detail-line:last-child{border-bottom:0}.r-detail-line span{color:#98aabd}.r-detail-line b{text-align:right;word-break:break-word}
+.r-detail-loading{padding:45px;text-align:center;color:#a8b5c8}
+@media(max-width:700px){.r-detail-grid{grid-template-columns:repeat(2,1fr)}.r-detail-line{grid-template-columns:1fr}.r-detail-line b{text-align:left}}
