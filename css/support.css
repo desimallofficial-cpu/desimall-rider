@@ -430,3 +430,41 @@
  .support-detail-pane{padding:14px !important}
  .chat-pro{max-width:92% !important}
 }
+
+/* ===== Final compact support polish v1.0.10 ===== */
+.support-pro-layout{min-height:455px!important}
+.support-detail-pane{min-height:390px!important;padding:15px!important}
+.support-ticket-pane{padding:12px!important}
+.ticket-list{max-height:455px!important}
+.ticket-description-pro{
+  min-height:0!important;
+  max-height:96px!important;
+  overflow-y:auto!important;
+  margin:9px 0 11px!important;
+  padding:10px 12px!important;
+  line-height:1.45!important;
+}
+.ticket-summary-grid{margin:9px 0!important}
+.ticket-summary-grid>div{padding:8px 9px!important}
+.support-conversation-head{margin:10px 0 6px!important}
+.support-chat-pro{max-height:240px!important;gap:8px!important}
+.chat-pro{padding:9px 11px!important;max-width:72%!important}
+.support-attachment{
+  display:inline-block!important;
+  width:auto!important;
+  max-width:190px!important;
+  margin-top:7px!important;
+}
+.support-attachment img{
+  width:190px!important;
+  height:105px!important;
+  max-height:105px!important;
+  object-fit:cover!important;
+}
+.support-attachment span{padding:5px 7px!important;font-size:9px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.support-reply-inline{margin-top:8px!important}
+.support-reply-shell{min-height:74px!important}
+.support-reply-shell textarea{min-height:72px!important;max-height:130px!important;padding:11px 88px 36px 12px!important;resize:none!important}
+.reply-inline-actions{right:8px!important;bottom:7px!important}
+.reply-icon-btn,.reply-send-icon{width:31px!important;height:31px!important;border-radius:8px!important}
+@media(max-width:760px){.chat-pro{max-width:90%!important}.support-attachment,.support-attachment img{max-width:160px!important;width:160px!important}}
