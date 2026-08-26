@@ -16,7 +16,10 @@ async init(){
  cancelRiderTicket.onclick=()=>this.hideModal();
  riderTicketModal.onclick=e=>{if(e.target===riderTicketModal)this.hideModal()};
  document.addEventListener('keydown',e=>{if(e.key==='Escape')this.hideModal()});
- riderTicketForm.onsubmit=e=>{e.preventDefault();this.create()};
+ riderTicketForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  this.create();
+});
  await this.load();
 },
 
@@ -87,18 +90,60 @@ async open(id,skip=false){
 },
 
 async create(){
- const submit=riderTicketForm.querySelector('button[type="submit"]');
- submit.disabled=true;submit.textContent='Submitting...';
+ const submit=document.getElementById('submitRiderTicket');
+ const msg=document.getElementById('riderTicketFormMsg');
+ if(submit?.disabled)return;
+
+ const category=String(riderCategory?.value||'').trim();
+ const priority=String(riderPriority?.value||'Medium').trim();
+ const subject=String(riderSubject?.value||'').trim();
+ const description=String(riderDescription?.value||'').trim();
+
+ const show=(text,type='')=>{
+  if(!msg)return;
+  msg.className=`support-form-msg ${type}`.trim();
+  msg.textContent=text||'';
+ };
+
+ if(!category){show('Please select a category.','error');return;}
+ if(subject.length<3){show('Subject kam se kam 3 characters ka hona chahiye.','error');riderSubject.focus();return;}
+ if(description.length<3){show('Description kam se kam 3 characters ka hona chahiye.','error');riderDescription.focus();return;}
+
+ submit.disabled=true;
+ submit.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+ show('Ticket submit ho raha hai...','loading');
+
  try{
   const r=await DesiMallAPI.createRiderSupportTicket({
-   Token:this.session.token,Category:riderCategory.value,Priority:riderPriority.value,
-   Subject:riderSubject.value.trim(),Description:riderDescription.value.trim()
+   Token:this.session.token,
+   Category:category,
+   Priority:priority,
+   Subject:subject,
+   Description:description
   });
-  if(!r.success)throw new Error(r.message||'Ticket failed.');
-  riderTicketForm.reset();this.hideModal();this.selected=r.ticketId;await this.load();
- }catch(e){alert(e.message)}
- finally{submit.disabled=false;submit.textContent='Submit Ticket'}
+
+  if(!r?.success)throw new Error(r?.message||'Ticket submit nahi ho saka.');
+
+  show(`Ticket ${r.ticketId||''} successfully create ho gaya.`,'success');
+  riderTicketForm.reset();
+  this.selected=r.ticketId||'';
+
+  await this.load();
+
+  setTimeout(()=>{
+   this.hideModal();
+   show('');
+  },700);
+
+ }catch(e){
+  console.error('Rider support create:',e);
+  show(e?.message||'Ticket submit nahi ho saka. Please try again.','error');
+ }finally{
+  submit.disabled=false;
+  submit.innerHTML='<i class="fa-solid fa-paper-plane"></i> Submit Ticket';
+ }
 },
+
 
 async reply(){
  const box=document.getElementById('riderReply');const msg=box?.value.trim();if(!msg)return;
