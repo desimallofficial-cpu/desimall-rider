@@ -20,8 +20,8 @@ async init(){
  await this.load();
 },
 
-showModal(){riderTicketModal.classList.add('show');riderTicketModal.setAttribute('aria-hidden','false');setTimeout(()=>riderSubject.focus(),60)},
-hideModal(){riderTicketModal.classList.remove('show');riderTicketModal.setAttribute('aria-hidden','true')},
+showModal(){riderTicketModal.classList.add('show');riderTicketModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>riderSubject.focus(),60)},
+hideModal(){riderTicketModal.classList.remove('show');riderTicketModal.setAttribute('aria-hidden','true');document.body.style.overflow=''},
 
 updateCounts(){
  const statuses=this.tickets.map(t=>String(t.Status||'Open').toLowerCase());
