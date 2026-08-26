@@ -203,3 +203,39 @@
   opacity:.75;
   cursor:not-allowed;
 }
+
+
+/* ===== Rider Support Summary + Screenshots v1.0.7 ===== */
+.support-optional{font-weight:600;color:#8295ac;font-size:10px}
+.ticket-list-time{display:block;color:#8295ac;margin-top:9px;font-size:10px}
+.ticket-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:16px 0}
+.ticket-summary-grid>div{background:#122034;border:1px solid #30445f;border-radius:12px;padding:11px}
+.ticket-summary-grid small{display:block;color:#8fa2b8;font-size:10px;margin-bottom:6px}
+.ticket-summary-grid b{font-size:12px;word-break:break-word}
+.ticket-section-label{display:block;color:#ff8b38;font-size:9px;font-weight:900;letter-spacing:.10em;margin-bottom:7px}
+
+.support-upload-box{border:1px dashed #415672;border-radius:13px;padding:13px;background:#132136}
+.support-upload-box>span{font-size:12px;font-weight:900;color:#d8e3ef}
+.support-upload-box input[type=file]{margin-top:10px;width:100%;color:#aebed0;font-size:11px}
+.support-upload-box small{color:#8295ac;font-weight:500}
+.support-image-preview{margin-top:9px}
+
+.selected-image-chip{display:grid;grid-template-columns:52px 1fr 30px;align-items:center;gap:9px;background:#1b2c43;border:1px solid #3b506d;border-radius:11px;padding:7px}
+.selected-image-chip img{width:52px;height:42px;object-fit:cover;border-radius:7px}
+.selected-image-chip span{font-size:10px;color:#cbd8e7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.selected-image-chip button{border:0;background:#324866;color:#fff;width:26px;height:26px;border-radius:7px;cursor:pointer}
+
+.support-attachment{display:block;margin-top:10px;text-decoration:none;color:#d8e6f5;background:#102034;border:1px solid #35506e;border-radius:12px;overflow:hidden;max-width:340px}
+.support-attachment img{display:block;width:100%;max-height:210px;object-fit:cover;background:#0c1726}
+.support-attachment span{display:block;padding:8px 10px;font-size:10px;font-weight:800}
+.from-support .support-attachment{border-color:#3b5d83}
+.from-rider .support-attachment{border-color:#7a4a31}
+
+.support-reply-compose{min-width:0}
+.reply-media-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:8px}
+.reply-attach-btn{display:inline-flex;align-items:center;gap:6px;background:#263b58;border:1px solid #3c5678;color:#d7e6f6;padding:8px 10px;border-radius:9px;font-size:10px;font-weight:900;cursor:pointer}
+#riderReplyPreview{min-width:0;flex:1}
+#riderReplyPreview .selected-image-chip{max-width:330px}
+
+@media(max-width:900px){.ticket-summary-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.ticket-summary-grid{grid-template-columns:1fr}}
