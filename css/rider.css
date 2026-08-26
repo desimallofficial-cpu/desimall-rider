@@ -321,3 +321,39 @@
   border-color:#ff6b00!important;
 }
 .gps-order-btn i{margin-right:6px}
+
+
+/* ===== Reached Customer -> OTP -> Delivered flow v1.0.3 ===== */
+.r-otp-stage-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.r-reached-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(22,163,74,.12);
+  border:1px solid rgba(22,163,74,.32);
+  color:#86efac;
+  font-size:10px;
+  font-weight:900;
+}
+.r-delivery-otp-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(255,107,0,.10);
+  border:1px solid rgba(255,107,0,.28);
+}
+.r-otp-input:valid{
+  border-color:rgba(22,163,74,.55);
+}
+.r-otp-submit:disabled{
+  filter:saturate(.35);
+}
