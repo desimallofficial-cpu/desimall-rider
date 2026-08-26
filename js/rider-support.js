@@ -1,5 +1,5 @@
 const RiderSupport={
-session:null,tickets:[],selected:'',ticketFile:null,replyFile:null,
+session:null,tickets:[],selected:'',ticketFile:null,replyFile:null,refreshTimer:null,isLoading:false,lastTicketStamp:'',
 
 esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));},
 date(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?String(v):d.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});},
@@ -20,6 +20,23 @@ async init(){
  riderTicketForm.addEventListener('submit',e=>{e.preventDefault();this.create()});
  riderScreenshot.addEventListener('change',e=>this.pickTicketImage(e.target.files?.[0]||null));
  await this.load();
+ this.startLiveRefresh();
+},
+
+
+startLiveRefresh(){
+ if(this.refreshTimer)clearInterval(this.refreshTimer);
+ this.refreshTimer=setInterval(()=>{
+  if(document.hidden || this.isLoading || riderTicketModal?.classList.contains('show')) return;
+  this.load(true);
+ },3000);
+},
+
+ticketStamp(list){
+ return JSON.stringify((list||[]).map(t=>[
+  t.TicketID,t.Status,t.UpdatedAt,t.LastReplyBy,
+  Array.isArray(t.Replies)?t.Replies.length:0
+ ]));
 },
 
 showModal(){
@@ -44,19 +61,60 @@ updateCounts(){
  supportResolvedCount.textContent=statuses.filter(x=>x==='resolved'||x==='closed').length;
 },
 
-async load(){
- refreshRiderSupport.disabled=true;refreshRiderSupport.textContent='Loading...';
+async load(silent=false){
+ if(this.isLoading)return;
+ this.isLoading=true;
+
+ const listScroll=riderTicketList?.scrollTop||0;
+ const chat=document.querySelector('.support-chat-pro');
+ const chatScroll=chat?.scrollTop||0;
+ const wasNearBottom=chat ? (chat.scrollHeight-chat.scrollTop-chat.clientHeight<80) : true;
+
+ if(!silent){
+  refreshRiderSupport.disabled=true;
+  refreshRiderSupport.textContent='Loading...';
+ }
+
  try{
   const r=await DesiMallAPI.getRiderSupport(this.session.token);
   if(!r.success)throw new Error(r.message||'Could not load support.');
-  this.tickets=r.tickets||[];
-  this.updateCounts();this.render();
-  if(this.selected&&this.tickets.some(x=>x.TicketID===this.selected))await this.open(this.selected,true);
-  else if(this.tickets.length&&innerWidth>1050)await this.open(this.tickets[0].TicketID,true);
+
+  const next=r.tickets||[];
+  const nextStamp=this.ticketStamp(next);
+  const changed=nextStamp!==this.lastTicketStamp;
+  this.tickets=next;
+  this.lastTicketStamp=nextStamp;
+
+  if(changed || !silent){
+   this.updateCounts();
+   this.render();
+
+   if(this.selected&&this.tickets.some(x=>x.TicketID===this.selected)){
+    await this.open(this.selected,true);
+   }else if(this.tickets.length&&innerWidth>1050){
+    await this.open(this.tickets[0].TicketID,true);
+   }
+
+   if(riderTicketList)riderTicketList.scrollTop=listScroll;
+   const newChat=document.querySelector('.support-chat-pro');
+   if(newChat){
+    if(wasNearBottom)newChat.scrollTop=newChat.scrollHeight;
+    else newChat.scrollTop=chatScroll;
+   }
+  }
  }catch(e){
-  riderTicketList.innerHTML=`<div class="support-empty-pro"><strong>Support unavailable</strong><span>${this.esc(e.message)}</span></div>`;
- }finally{refreshRiderSupport.disabled=false;refreshRiderSupport.textContent='Refresh'}
+  if(!silent){
+   riderTicketList.innerHTML=`<div class="support-empty-pro"><strong>Support unavailable</strong><span>${this.esc(e.message)}</span></div>`;
+  }
+ }finally{
+  this.isLoading=false;
+  if(!silent){
+   refreshRiderSupport.disabled=false;
+   refreshRiderSupport.textContent='Refresh';
+  }
+ }
 },
+
 
 render(){
  riderTicketList.innerHTML=this.tickets.length?this.tickets.map(t=>`
@@ -88,7 +146,10 @@ async open(id,skip=false){
  riderTicketDetail.innerHTML=`
   <div class="ticket-detail-pro-head">
    <div><span class="support-kicker">${this.esc(t.TicketID)}</span><h2>${this.esc(t.Subject)}</h2><div class="ticket-pro-meta"><span>${this.esc(t.Category||'Other')}</span><span>${this.esc(t.Priority||'Medium')} priority</span></div></div>
-   <span class="ticket-status status-${this.statusClass(t.Status)}">${this.esc(t.Status||'Open')}</span>
+   <div class="ticket-head-right">
+    <span class="support-live-sync"><i></i> Live</span>
+    <span class="ticket-status status-${this.statusClass(t.Status)}">${this.esc(t.Status||'Open')}</span>
+   </div>
   </div>
 
   <div class="ticket-summary-grid">
