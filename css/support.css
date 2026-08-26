@@ -333,3 +333,100 @@
  .support-reply-shell textarea{padding-right:82px !important}
  .reply-icon-btn,.reply-send-icon{width:32px;height:32px}
 }
+
+
+/* ===== Compact support layout + 3 sec live refresh v1.0.9 ===== */
+.support-pro-layout{
+  min-height:500px !important;
+}
+.support-ticket-pane{
+  padding:14px !important;
+}
+.ticket-list{
+  max-height:500px !important;
+}
+.ticket-pro-item{
+  padding:11px 12px !important;
+  border-radius:12px !important;
+}
+.ticket-pro-item h3{
+  margin:6px 0 !important;
+}
+.support-detail-pane{
+  min-height:430px !important;
+  padding:18px !important;
+}
+.ticket-detail-pro-head{
+  padding-bottom:12px !important;
+}
+.ticket-detail-pro-head h2{
+  font-size:22px !important;
+}
+.ticket-summary-grid{
+  margin:12px 0 !important;
+  gap:7px !important;
+}
+.ticket-summary-grid>div{
+  padding:9px 10px !important;
+  border-radius:10px !important;
+}
+.ticket-description-pro{
+  margin:12px 0 14px !important;
+  padding:12px 14px !important;
+  min-height:86px !important;
+  max-height:150px;
+  overflow:auto;
+  border-radius:12px !important;
+}
+.support-conversation-head{
+  margin:14px 0 8px !important;
+}
+.support-chat-pro{
+  max-height:270px !important;
+  gap:9px !important;
+}
+.chat-pro{
+  padding:10px 12px !important;
+  border-radius:12px !important;
+  max-width:76% !important;
+}
+.support-reply-inline{
+  margin-top:10px !important;
+}
+.support-reply-shell{
+  min-height:82px !important;
+}
+.support-reply-shell textarea{
+  min-height:80px !important;
+  padding-top:12px !important;
+}
+.ticket-head-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.support-live-sync{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#9fe9bb;
+  background:#123b2a;
+  border:1px solid #245a40;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:900;
+}
+.support-live-sync i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#20d676;
+  box-shadow:0 0 0 3px rgba(32,214,118,.12);
+}
+@media(max-width:760px){
+ .support-detail-pane{padding:14px !important}
+ .chat-pro{max-width:92% !important}
+}
