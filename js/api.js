@@ -2000,6 +2000,11 @@ const DesiMallAPI = {
       method: 'POST', data, token: data.Token || data.token || ''
     });
   },
+  riderSupportImage(data = {}) {
+    return this._roleRest('rider', '/api/v1/rider/support-image', {
+      method: 'POST', data, token: data.Token || data.token || ''
+    });
+  },
   riderSupportReply(data = {}) {
     return this._roleRest(
       'rider',

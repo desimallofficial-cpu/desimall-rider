@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rider Support - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css?v=1.0.6">
-<link rel="stylesheet" href="../css/support.css?v=1.0.6">
+<link rel="stylesheet" href="../css/rider.css?v=1.0.7">
+<link rel="stylesheet" href="../css/support.css?v=1.0.7">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -70,15 +70,22 @@
   <form id="riderTicketForm" class="rider-support-form">
    <label>Category<select id="riderCategory" required><option>Delivery</option><option>COD</option><option>Payout</option><option>Return Pickup</option><option>Account / KYC</option><option>Other</option></select></label>
    <label>Priority<select id="riderPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select></label>
+   <label class="full">Order / Return Reference <span class="support-optional">(optional)</span><input id="riderReference" maxlength="120" placeholder="Example: DM-XXXX or RT-XXXX"></label>
    <label class="full">Subject<input id="riderSubject" maxlength="120" required placeholder="Short summary of the issue"></label>
-   <label class="full">Description<textarea id="riderDescription" rows="6" maxlength="1500" required placeholder="Order ID / Return ID aur problem ki complete detail likhein..."></textarea></label>
+   <label class="full">Description<textarea id="riderDescription" rows="5" maxlength="1500" required placeholder="Problem ki complete detail likhein..."></textarea></label>
+   <label class="full support-upload-box">
+    <span><i class="fa-solid fa-image"></i> Problem Screenshot <span class="support-optional">(optional)</span></span>
+    <input id="riderScreenshot" type="file" accept="image/jpeg,image/png,image/webp">
+    <small>JPG, PNG ya WEBP. Image automatically compress hogi.</small>
+    <div id="riderScreenshotPreview" class="support-image-preview"></div>
+   </label>
    <div class="full" id="riderTicketFormMsg" role="status" aria-live="polite"></div>
 <div class="full support-form-actions"><button type="button" class="r-btn secondary" id="cancelRiderTicket">Cancel</button><button type="submit" class="r-btn" id="submitRiderTicket">Submit Ticket</button></div>
   </form>
  </div>
 </div>
 
-<script src="../js/api.js?v=1.0.6"></script>
-<script src="../js/rider-support.js?v=1.0.6"></script>
+<script src="../js/api.js?v=1.0.7"></script>
+<script src="../js/rider-support.js?v=1.0.7"></script>
 </body>
 </html>
