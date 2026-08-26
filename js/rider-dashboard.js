@@ -508,9 +508,14 @@ const RiderDashboard = {
         return `
           <div class="r-delivery-otp-card">
             <div class="r-delivery-otp-copy">
-              <span class="r-delivery-otp-kicker">
-                <i class="fa-solid fa-shield-halved"></i> OTP VERIFICATION REQUIRED
-              </span>
+              <div class="r-otp-stage-row">
+                <span class="r-reached-badge">
+                  <i class="fa-solid fa-location-dot"></i> Reached Customer
+                </span>
+                <span class="r-delivery-otp-kicker">
+                  <i class="fa-solid fa-shield-halved"></i> OTP REQUIRED
+                </span>
+              </div>
               <strong>Customer से 6-digit OTP लें</strong>
               <small>
                 सही OTP verify होने के बाद ही
@@ -528,11 +533,13 @@ const RiderDashboard = {
                 id="otp_${this.esc(id)}"
                 class="r-otp-input"
                 placeholder="Enter 6-digit OTP"
-                oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6)"
+                oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6); RiderDashboard.syncOtpButton('${this.esc(id)}')"
+                onkeydown="if(event.key==='Enter'){event.preventDefault(); RiderDashboard.deliverWithOtp('${this.esc(id)}')}"
               >
               <button
                 type="button"
                 class="r-btn success r-otp-submit"
+                disabled
                 onclick="RiderDashboard.deliverWithOtp('${this.esc(id)}')"
               >
                 <i class="fa-solid fa-circle-check"></i>
@@ -544,6 +551,17 @@ const RiderDashboard = {
           </div>`;
       default:
         return '<span class="r-status">अभी कोई action नहीं</span>';
+    }
+  },
+
+
+  syncOtpButton(id) {
+    const input = document.getElementById(`otp_${id}`);
+    const btn = input?.closest('.r-otp-delivery')?.querySelector('.r-otp-submit');
+    const otp = String(input?.value || '').replace(/\D/g, '').slice(0, 6);
+
+    if (btn) {
+      btn.disabled = otp.length !== 6;
     }
   },
 
@@ -581,6 +599,14 @@ const RiderDashboard = {
 
       if(r?.success){
         setMsg('OTP verified. Order delivered successfully.','success');
+
+        if (this.geoWatchId !== null && navigator.geolocation) {
+          navigator.geolocation.clearWatch(this.geoWatchId);
+          this.geoWatchId = null;
+        }
+        this.geoOrder = null;
+        this.setGpsStatus('Delivery completed — live location stopped');
+
         await this.load();
         return;
       }
@@ -590,13 +616,25 @@ const RiderDashboard = {
       setMsg(error?.message||'Wrong / invalid OTP. Please enter the customer OTP.','error');
     }finally{
       if(btn && document.body.contains(btn)){
-        btn.disabled=false;
-        btn.innerHTML='<i class="fa-solid fa-circle-check"></i> Verify OTP & Deliver';
+        const order = this.orders.find(o => String(o?.OrderID || '') === String(id || ''));
+        const rawMode = String(order?.FulfillmentMode || '').toLowerCase();
+        const serviceMode = ['service','services'].includes(rawMode);
+        btn.innerHTML = serviceMode
+          ? '<i class="fa-solid fa-circle-check"></i> Verify OTP & Complete'
+          : '<i class="fa-solid fa-circle-check"></i> Verify OTP & Deliver';
+        this.syncOtpButton(id);
       }
     }
   },
 
   async update(id, status) {
+    if (String(status || '').trim().toLowerCase() === 'delivered') {
+      alert('Delivery complete karne ke liye customer OTP verification compulsory hai.');
+      const otpInput = document.getElementById(`otp_${id}`);
+      otpInput?.focus();
+      return;
+    }
+
     if (!confirm(`${id} ko ${status} mark karein?`)) return;
 
     try {
