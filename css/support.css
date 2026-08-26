@@ -239,3 +239,97 @@
 
 @media(max-width:900px){.ticket-summary-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.ticket-summary-grid{grid-template-columns:1fr}}
+
+
+/* ===== Compact inline reply composer v1.0.8 ===== */
+.support-reply-inline{
+  display:block !important;
+  margin-top:14px;
+}
+.support-reply-shell{
+  position:relative;
+  width:100%;
+  min-height:96px;
+  background:#101d2f;
+  border:1px solid #344b68;
+  border-radius:14px;
+  overflow:hidden;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+.support-reply-shell:focus-within{
+  border-color:#ff6b00;
+  box-shadow:0 0 0 2px rgba(255,107,0,.10);
+}
+.support-reply-shell textarea{
+  display:block;
+  width:100%;
+  min-height:94px;
+  max-height:190px;
+  resize:vertical;
+  box-sizing:border-box;
+  border:0 !important;
+  outline:0 !important;
+  background:transparent !important;
+  color:#f5f8fc;
+  padding:15px 92px 42px 15px !important;
+  font:inherit;
+  box-shadow:none !important;
+}
+.support-reply-shell textarea::placeholder{color:#71849b}
+.reply-inline-actions{
+  position:absolute;
+  right:9px;
+  bottom:9px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.reply-icon-btn,.reply-send-icon{
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding:0;
+  font-size:13px;
+}
+.reply-icon-btn{
+  background:#223650;
+  border:1px solid #3a5270;
+  color:#d8e5f3;
+}
+.reply-icon-btn:hover{background:#2b4260;color:#fff}
+.reply-send-icon{
+  border:0;
+  background:#ff6b00;
+  color:#fff;
+}
+.reply-send-icon:hover{filter:brightness(1.08)}
+.reply-send-icon:disabled{opacity:.6;cursor:not-allowed}
+.reply-inline-preview{
+  position:absolute;
+  left:10px;
+  bottom:7px;
+  max-width:calc(100% - 105px);
+}
+.reply-inline-preview:empty{display:none}
+.reply-inline-preview .selected-image-chip{
+  grid-template-columns:28px minmax(0,1fr) 22px;
+  gap:6px;
+  max-width:300px;
+  padding:4px 6px;
+  border-radius:8px;
+}
+.reply-inline-preview .selected-image-chip img{
+  width:28px;height:28px;border-radius:5px
+}
+.reply-inline-preview .selected-image-chip span{font-size:9px}
+.reply-inline-preview .selected-image-chip button{
+  width:20px;height:20px;border-radius:5px;font-size:12px
+}
+@media(max-width:600px){
+ .support-reply-shell textarea{padding-right:82px !important}
+ .reply-icon-btn,.reply-send-icon{width:32px;height:32px}
+}
