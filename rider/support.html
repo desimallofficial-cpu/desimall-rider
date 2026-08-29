@@ -1,91 +1,26 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rider Support - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css?v=1.0.10">
-<link rel="stylesheet" href="../css/support.css?v=1.0.10">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-</head>
-<body>
-<div class="r-shell">
- <aside class="r-side">
-  <div class="r-brand">Desi<span>Mall</span></div>
-  <div class="r-user"><strong id="riderName">Rider</strong><small>Delivery Partner</small></div>
-  <nav class="r-nav">
-   <a  href="dashboard.html"><i class="fa-solid fa-truck-fast"></i> Deliveries</a>
-   <a  href="returns.html"><i class="fa-solid fa-arrow-rotate-left"></i> Return Pickups</a>
-   <a  href="earnings.html"><i class="fa-solid fa-wallet"></i> Rider Account</a>
-   <a class="active"  href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
-   <button  id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-  </nav>
- </aside>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rider Support - DesiMall</title><link rel="stylesheet" href="../css/rider.css?v=0.32.3"><link rel="stylesheet" href="../css/support.css?v=0.32.3">
+<script id="dmReleaseBootstrap">
+(() => {
+  const RELEASE = 'v0.32.3';
+  window.DESIMALL_RELEASE = RELEASE;
+  try {
+    const prev = localStorage.getItem('desimall_release');
+    if (prev !== RELEASE) {
+      localStorage.setItem('desimall_release', RELEASE);
+      if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))).catch(() => {});
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+      }
+    }
+  } catch (_) {}
+})();
+</script>
 
- <main class="r-main rider-support-main">
-  <header class="r-head rider-support-head">
-   <div>
-    <span class="support-kicker">RIDER HELP CENTER</span>
-    <h1>Support</h1>
-    <p>Delivery, COD, payout, return pickup ya account issue ko trackable ticket ke through resolve karein.</p>
-   </div>
-   <div class="support-head-actions">
-    <button class="r-btn secondary" id="refreshRiderSupport">Refresh</button>
-    <button class="r-btn" id="newRiderTicket">+ New Ticket</button>
-   </div>
-  </header>
-
-  <section class="support-overview">
-   <article><span>Open tickets</span><strong id="supportOpenCount">0</strong><small>Needs attention</small></article>
-   <article><span>In progress</span><strong id="supportProgressCount">0</strong><small>Team is working</small></article>
-   <article><span>Resolved</span><strong id="supportResolvedCount">0</strong><small>Completed issues</small></article>
-  </section>
-
-  <section class="support-category-bar">
-   <div><b>Quick help categories</b><small>Select category while creating a ticket.</small></div>
-   <div class="support-category-chips">
-    <span>Delivery</span><span>COD</span><span>Payout</span><span>Return Pickup</span><span>Account / KYC</span>
-   </div>
-  </section>
-
-  <section class="r-panel support-pro-panel">
-   <div class="support-pro-layout">
-    <aside class="support-ticket-pane">
-     <div class="support-pane-head"><div><h2>My Tickets</h2><small>Latest conversations</small></div></div>
-     <div id="riderTicketList" class="ticket-list"></div>
-    </aside>
-    <section id="riderTicketDetail" class="support-detail-pane support-empty-pro compact-empty">
- <div class="support-empty-icon"><i class="fa-solid fa-headset"></i></div>
- <strong>Select a support ticket</strong>
- <span>Ticket details and replies will appear here.</span>
-</section>
-   </div>
-  </section>
- </main>
-</div>
-
-<div class="r-support-modal-backdrop" id="riderTicketModal" aria-hidden="true">
- <div class="r-support-modal-card" role="dialog" aria-modal="true" aria-labelledby="riderTicketTitle">
-  <div class="modal-head"><div><span class="support-kicker">CREATE REQUEST</span><h2 id="riderTicketTitle">New Support Ticket</h2></div><button class="r-support-modal-close" id="closeRiderTicket" type="button" aria-label="Close">×</button></div>
-  <form id="riderTicketForm" class="rider-support-form">
-   <label>Category<select id="riderCategory" required><option>Delivery</option><option>COD</option><option>Payout</option><option>Return Pickup</option><option>Account / KYC</option><option>Other</option></select></label>
-   <label>Priority<select id="riderPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select></label>
-   <label class="full">Order / Return Reference <span class="support-optional">(optional)</span><input id="riderReference" maxlength="120" placeholder="Example: DM-XXXX or RT-XXXX"></label>
-   <label class="full">Subject<input id="riderSubject" maxlength="120" required placeholder="Short summary of the issue"></label>
-   <label class="full">Description<textarea id="riderDescription" rows="5" maxlength="1500" required placeholder="Problem ki complete detail likhein..."></textarea></label>
-   <label class="full support-upload-box">
-    <span><i class="fa-solid fa-image"></i> Problem Screenshot <span class="support-optional">(optional)</span></span>
-    <input id="riderScreenshot" type="file" accept="image/jpeg,image/png,image/webp">
-    <small>JPG, PNG ya WEBP. Image automatically compress hogi.</small>
-    <div id="riderScreenshotPreview" class="support-image-preview"></div>
-   </label>
-   <div class="full" id="riderTicketFormMsg" role="status" aria-live="polite"></div>
-<div class="full support-form-actions"><button type="button" class="r-btn secondary" id="cancelRiderTicket">Cancel</button><button type="submit" class="r-btn" id="submitRiderTicket">Submit Ticket</button></div>
-  </form>
- </div>
-</div>
-
-<script src="../js/api.js?v=1.0.10"></script>
-<script src="../js/rider-support.js?v=1.0.10"></script>
-</body>
-</html>
+</head><body>
+<div class="r-shell"><aside class="r-side"><div class="r-brand">Desi<span>Mall</span></div><div class="r-user"><strong id="riderName">Rider</strong><small>Delivery Partner</small></div><nav class="r-nav"><a href="dashboard.html">Deliveries</a><a href="returns.html">Return Pickups</a><a href="earnings.html">Rider Account</a><a class="active" href="support.html">Support</a><button id="logoutBtn">Logout</button></nav></aside>
+<main class="r-main"><header class="r-head"><div><h1>Rider Support</h1><p>Delivery, COD, payout, return pickup ya account issue ke liye support ticket banayein.</p></div><button class="r-btn secondary" id="refreshRiderSupport">Refresh</button></header>
+<section class="r-panel"><div class="r-toolbar"><button class="r-btn" id="newRiderTicket">New Ticket</button></div><div class="support-layout"><div id="riderTicketList" class="ticket-list"></div><div id="riderTicketDetail" class="support-empty"><strong>Select a ticket</strong></div></div></section></main></div>
+<div class="modal" id="riderTicketModal"><div class="modal-box support-modal"><div class="modal-head"><h2>New Rider Support Ticket</h2><button class="close-btn" id="closeRiderTicket">×</button></div><form id="riderTicketForm" class="form-grid"><div class="field"><label>Category</label><select id="riderCategory" required><option>Delivery</option><option>COD</option><option>Payout</option><option>Return Pickup</option><option>Account / KYC</option><option>Other</option></select></div><div class="field"><label>Priority</label><select id="riderPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select></div><div class="field full"><label>Subject</label><input id="riderSubject" required></div><div class="field full"><label>Description</label><textarea id="riderDescription" rows="5" required></textarea></div><div class="field full"><button class="r-btn">Submit Ticket</button></div></form></div></div>
+<script src="../js/api.js?v=0.32.3"></script><script src="../js/rider-support.js?v=0.32.3"></script></body></html>

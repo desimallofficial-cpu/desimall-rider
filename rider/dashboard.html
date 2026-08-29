@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Rider Dashboard - DesiMall</title>
-  <link rel="stylesheet" href="../css/rider.css?v=1.0.1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css?v=1.0.1">
+  <link rel="stylesheet" href="../css/rider.css?v=0.32.3">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css?v=0.32.3">
 
 <style id="riderTezV027">
 .r-tez-tag{display:inline-flex;align-items:center;gap:4px;margin-left:6px;padding:4px 7px;border-radius:999px;background:#ff6500;color:#fff;font-size:8px;font-weight:900}
 .r-tez-target{margin:8px 0;padding:8px 10px;border:1px solid rgba(255,101,0,.3);border-radius:9px;background:rgba(255,101,0,.1);color:#ffb47c;font-size:9px;font-weight:800}
 </style>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css?v=1.0.1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css?v=0.32.3">
 
 <script id="dmReleaseBootstrap">
 (() => {
@@ -33,6 +33,10 @@
 })();
 </script>
 
+
+<style>
+.r-tryon-finalize{border:1px solid #7c3d12;background:linear-gradient(120deg,#141f2e,#24170f);border-radius:13px;padding:12px;margin:10px 0}.r-tryon-title{display:flex;justify-content:space-between;gap:10px;align-items:center}.r-tryon-title small{display:block;color:#fb923c;font-size:8px;font-weight:900}.r-tryon-title strong{display:block;font-size:11px;margin-top:3px}.r-tryon-title>span{font-size:8px;color:#fbbf24}.r-tryon-help{font-size:8px;color:#cbd5e1;margin:9px 0;line-height:1.45}.r-tryon-items{display:grid;gap:6px}.r-tryon-item{display:flex;align-items:center;gap:8px;border:1px solid #334155;background:#0e1825;border-radius:8px;padding:8px}.r-tryon-item input{accent-color:#22c55e}.r-tryon-item b{display:block;font-size:9px}.r-tryon-item small{display:block;color:#94a3b8;font-size:7.5px;margin-top:2px}.r-tryon-summary{display:flex;justify-content:space-between;border-top:1px dashed #475569;margin-top:9px;padding-top:8px;font-size:9px}.r-tryon-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;margin-top:9px}.r-tryon-controls input,.r-tryon-controls select{border:1px solid #334155;background:#0d1725;color:#fff;border-radius:8px;padding:8px;font:inherit;font-size:9px}@media(max-width:650px){.r-tryon-controls{grid-template-columns:1fr}}
+</style>
 </head>
 
 <body>
@@ -42,7 +46,7 @@ z-index:999999;background:#2563eb;color:white;border-radius:999px;
 padding:7px 14px;font:800 11px Arial,sans-serif;box-shadow:0 5px 18px rgba(0,0,0,.25)">
 RIDER COMPLETE v0.32.3
 </div>
-
+<div style="position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:999999;background:#2563eb;color:#fff;border-radius:999px;padding:7px 14px;font:800 11px Arial,sans-serif">RIDER GPS CHAIN v0.32.3</div>
 <div class="r-shell">
   <aside class="r-side">
     <div class="r-brand">Desi<span>Mall</span></div>
@@ -53,11 +57,11 @@ RIDER COMPLETE v0.32.3
     </div>
 
     <nav class="r-nav">
-      <a class="active"  href="dashboard.html"><i class="fa-solid fa-truck-fast"></i> Deliveries</a>
-      <a  href="returns.html"><i class="fa-solid fa-arrow-rotate-left"></i> Return Pickups</a>
-      <a  href="earnings.html"><i class="fa-solid fa-wallet"></i> Rider Account</a>
-      <a  href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
-      <button  id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      <a class="active" href="dashboard.html">Deliveries</a>
+      <a href="returns.html">Return Pickups</a>
+      <a href="earnings.html">Rider Account</a>
+      <a href="support.html">Support</a>
+      <button id="logoutBtn">Logout</button>
     </nav>
   </aside>
 
@@ -106,10 +110,10 @@ RIDER COMPLETE v0.32.3
   </main>
 </div>
 
-<script src="../js/api.js?v=1.0.1"></script>
-<script src="../js/rider-dashboard.js?v=1.0.3"></script>
+<script src="../js/api.js?v=0.33.0"></script>
+<script src="../js/rider-dashboard.js?v=0.33.0"></script>
 <div id="dmRiderBuildBadge">Rider v0.32.3 UNIVERSAL</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js?v=1.0.1"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js?v=0.32.3"></script>
 
 <div id="riderMapModal" class="r-map-modal hidden" aria-hidden="true">
   <div class="r-map-modal-card">
@@ -143,6 +147,5 @@ RIDER COMPLETE v0.32.3
 </div>
 
 <div style="position:fixed;right:12px;bottom:12px;z-index:999999;background:#111827;color:#e5e7eb;border:1px solid #475569;border-radius:999px;padding:6px 10px;font:800 10px Arial,sans-serif">Rider v0.32.3 LIVE</div>
-<div style="position:fixed;right:12px;bottom:12px;z-index:999999;background:#111827;color:#e5e7eb;border:1px solid #475569;border-radius:999px;padding:6px 10px;font:800 10px Arial">Rider Clean v1.0.3</div>
 </body>
 </html>

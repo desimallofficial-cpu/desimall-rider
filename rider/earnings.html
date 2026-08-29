@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rider Account - DesiMall</title>
-<link rel="stylesheet" href="../css/rider.css?v=1.0.10">
+<link rel="stylesheet" href="../css/rider.css?v=0.32.3">
 <style>
 .money-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 24px}
 .money-card{background:#18263a;border:1px solid #31445f;border-radius:16px;padding:18px}
@@ -12,10 +12,6 @@
 .simple-note{background:#142334;border:1px solid #2b415c;border-radius:14px;padding:14px;color:#b8c8da;line-height:1.5;margin-bottom:18px}
 .account-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px;align-items:center;padding:15px 0;border-bottom:1px solid #27384f}
 .account-row:last-child{border-bottom:0}.account-row small{display:block;color:#91a3b9;margin-top:4px}.good-money{color:#6ee7a2}.cod-money{color:#ffb15c}
-.order-detail-link{border:0;background:transparent;color:#fff;font:inherit;font-weight:900;padding:0;cursor:pointer;text-align:left}
-.order-detail-link:hover{color:#ff8b38;text-decoration:underline;text-underline-offset:3px}
-.order-detail-link:focus-visible{outline:2px solid #ff8b38;outline-offset:4px;border-radius:4px}
-.delivery-date{color:#9fb0c4}
 @media(max-width:800px){.money-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.account-row{grid-template-columns:1fr}}
 </style>
 
@@ -38,7 +34,6 @@
 })();
 </script>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 <div class="r-shell">
@@ -46,11 +41,10 @@
 <div class="r-brand">Desi<span>Mall</span></div>
 <div class="r-user"><strong id="riderName">Rider</strong><small>Delivery Partner</small></div>
 <nav class="r-nav">
-<a  href="dashboard.html"><i class="fa-solid fa-truck-fast"></i> Deliveries</a>
-<a  href="returns.html"><i class="fa-solid fa-arrow-rotate-left"></i> Return Pickups</a>
-<a class="active"  href="earnings.html"><i class="fa-solid fa-wallet"></i> Rider Account</a>
-<a  href="support.html"><i class="fa-solid fa-headset"></i> Support</a>
-<button  id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+<a href="dashboard.html">Deliveries</a>
+<a href="returns.html">Return Pickups</a>
+<a class="active" href="earnings.html">Rider Account</a>
+<button id="logoutBtn">Logout</button>
 </nav>
 </aside>
 <main class="r-main">
@@ -68,15 +62,7 @@
 <section class="r-panel"><div class="r-toolbar"><h2 style="margin:0">Recent Deliveries</h2></div><div id="recentList"></div></section><section class="r-panel" style="margin-top:18px"><div class="r-toolbar"><h2 style="margin:0">Payout History</h2></div><div id="payoutList"></div></section>
 </main>
 </div>
-
-<div class="r-modal" id="deliveryDetailModal" aria-hidden="true">
-  <div class="r-modal-card r-delivery-detail-card">
-    <button class="r-modal-x" id="closeDeliveryDetail" type="button" aria-label="Close">×</button>
-    <div id="deliveryDetailContent"></div>
-  </div>
-</div>
-
-<script src="../js/api.js?v=1.0.10"></script>
-<script src="../js/rider-account.js?v=1.0.10"></script>
+<script src="../js/api.js?v=0.32.3"></script>
+<script src="../js/rider-account.js?v=0.32.3"></script>
 </body>
 </html>
