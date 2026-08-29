@@ -1388,6 +1388,22 @@ const DesiMallAPI = {
     );
   },
 
+  finalizeRiderTryOn(orderId, data = {}, token = '') {
+    return this._roleRest(
+      'rider',
+      `/api/v1/rider/tryon/${encodeURIComponent(String(orderId || ''))}/finalize`,
+      {
+        method: 'POST',
+        data: {
+          KeepOrderItemIDs: Array.isArray(data.KeepOrderItemIDs) ? data.KeepOrderItemIDs : [],
+          DeliveryOTP: data.DeliveryOTP || '',
+          CollectionMethod: data.CollectionMethod || 'cash'
+        },
+        token
+      }
+    );
+  },
+
   updateRiderLiveLocation(data = {}, token = '') {
     return this._roleRest('rider', '/api/v1/rider/location', {
       method: 'PATCH',
@@ -1997,11 +2013,6 @@ const DesiMallAPI = {
   },
   createRiderSupportTicket(data = {}) {
     return this._roleRest('rider', '/api/v1/rider/support', {
-      method: 'POST', data, token: data.Token || data.token || ''
-    });
-  },
-  riderSupportImage(data = {}) {
-    return this._roleRest('rider', '/api/v1/rider/support-image', {
       method: 'POST', data, token: data.Token || data.token || ''
     });
   },

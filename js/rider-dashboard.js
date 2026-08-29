@@ -1,4 +1,4 @@
-window.DESIMALL_RIDER_BUILD='clean-v1.0.2';
+window.DESIMALL_RIDER_BUILD='v0.31.6';
 const RiderDashboard = {
   key: 'desimall_rider_session',
   session: {},
@@ -408,22 +408,54 @@ const RiderDashboard = {
     </div>`;
   },
 
+
+  tryOnFinalizePanel(o) {
+    const mode=String(o.FulfillmentMode||'').toLowerCase();
+    const reached=String(o.RiderStatus||'').toLowerCase()==='reached customer';
+    if(!['try_on','try-on','tryon'].includes(mode)||!reached)return '';
+
+    const items=(o.Items||[]).map(item=>`
+      <label class="r-tryon-item">
+        <input type="checkbox" class="r-tryon-keep" data-order="${this.esc(o.OrderID)}" value="${this.esc(item.OrderItemID)}" data-amount="${Number(item.Amount||0)}">
+        <span><b>${this.esc(item.ProductName)}</b><small>Keep this item · ₹${Number(item.Amount||0).toLocaleString('en-IN')}</small></span>
+      </label>
+    `).join('');
+
+    return `<div class="r-tryon-finalize">
+      <div class="r-tryon-title">
+        <div><small>TRY-ON DECISION</small><strong>Customer chooses what to keep</strong></div>
+        <span>${Number(o.TryOnTrialMinutes||15)} min trial</span>
+      </div>
+      <div class="r-tryon-help">Tick only the items the customer is keeping. Unticked items will return with you and go back to inventory.</div>
+      <div class="r-tryon-items">${items}</div>
+      <div class="r-tryon-summary">
+        <span>Try-On visit fee</span><b>₹${Number(o.TryOnVisitFee||0).toLocaleString('en-IN')}</b>
+      </div>
+      <div class="r-tryon-controls">
+        <input inputmode="numeric" maxlength="6" id="tryonOtp_${this.esc(o.OrderID)}" placeholder="Customer 6-digit OTP" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6)">
+        <select id="tryonPay_${this.esc(o.OrderID)}"><option value="cash">Cash collected</option><option value="upi">UPI collected</option></select>
+        <button class="r-btn success" type="button" onclick="RiderDashboard.finalizeTryOn('${this.esc(o.OrderID)}')"><i class="fa-solid fa-shirt"></i> Finalize Try-On</button>
+      </div>
+      <div class="r-otp-message" id="tryonMsg_${this.esc(o.OrderID)}"></div>
+    </div>`;
+  },
+
   card(o) {
     const items = (o.Items || [])
       .map(i => `${this.esc(i.ProductName)} × ${Number(i.Qty || 0)}`)
       .join(', ');
-    const isDelivered = String(o.RiderStatus || '').trim().toLowerCase() === 'delivered';
 
-    return `<article class="r-order ${isDelivered ? 'r-order-delivered' : ''}">
+    return `<article class="r-order">
       <div class="r-order-head">
         <div>
           <strong>${this.esc(o.OrderID)}</strong>
           ${o.IsTez ? '<span class="r-tez-tag"><i class="fa-solid fa-bolt"></i> Tez</span>' : ''}
+          ${['try_on','try-on','tryon'].includes(String(o.FulfillmentMode||'').toLowerCase()) ? '<span class="r-tez-tag"><i class="fa-solid fa-shirt"></i> Try-On</span>' : ''}
         </div>
         <span class="r-status">${this.esc(o.RiderStatus || '')}</span>
       </div>
 
-      ${o.IsTez && !isDelivered ? `<div class="r-tez-target">
+      ${o.IsTez ? `<div class="r-tez-target">
         <i class="fa-solid fa-bolt"></i>
         Fast delivery target ${Number(o.DeliveryTargetMinMinutes || 0)}–${Number(o.DeliveryTargetMaxMinutes || 0)} min
       </div>
@@ -432,7 +464,7 @@ const RiderDashboard = {
         Customer live map tabhi chalega jab upar <b>Start Live Location</b> ON ho.
       </div>` : ''}
 
-      ${isDelivered ? '' : this.routeBlock(o)}
+      ${this.routeBlock(o)}
 
       <div class="r-order-body">
         <div>
@@ -448,28 +480,11 @@ const RiderDashboard = {
         </div>
       </div>
 
-      ${isDelivered ? '' : `<div class="r-order-actions">
-        ${this.liveGpsAction(o)}
-        ${this.actions(o.OrderID, o.RiderStatus, o.FulfillmentMode || (o.IsTez ? 'tez' : 'marketplace'))}
-      </div>`}
+      ${this.tryOnFinalizePanel(o)}
+      <div class="r-order-actions">
+        ${this.actions(o.OrderID, o.RiderStatus, o.FulfillmentMode)}
+      </div>
     </article>`;
-  },
-
-  liveGpsAction(o) {
-    const status = String(o?.RiderStatus || '').toLowerCase();
-    const rawMode = String(o?.FulfillmentMode || '').toLowerCase();
-    const mapMode =
-      o?.IsTez === true ||
-      ['tez','food','service','services','try-on','try_on','tryon'].includes(rawMode);
-
-    if (!mapMode || !/pickup assigned|pickup accepted|picked up|on the way|reached customer/.test(status)) {
-      return '';
-    }
-
-    return `<button class="r-btn gps-order-btn" type="button"
-      onclick="RiderDashboard.startOrderLiveLocation('${this.esc(o.OrderID)}')">
-      <i class="fa-solid fa-location-crosshairs"></i> Start Live GPS
-    </button>`;
   },
 
   actions(id, status, fulfillmentMode='marketplace') {
@@ -505,17 +520,15 @@ const RiderDashboard = {
         return b('Customer तक पहुँच गए', 'Reached Customer', 'success');
 
       case 'reached customer':
+        if(mode==='try_on'){
+          return '<span class="r-status">Use the Try-On decision panel above to finish this visit.</span>';
+        }
         return `
           <div class="r-delivery-otp-card">
             <div class="r-delivery-otp-copy">
-              <div class="r-otp-stage-row">
-                <span class="r-reached-badge">
-                  <i class="fa-solid fa-location-dot"></i> Reached Customer
-                </span>
-                <span class="r-delivery-otp-kicker">
-                  <i class="fa-solid fa-shield-halved"></i> OTP REQUIRED
-                </span>
-              </div>
+              <span class="r-delivery-otp-kicker">
+                <i class="fa-solid fa-shield-halved"></i> OTP VERIFICATION REQUIRED
+              </span>
               <strong>Customer से 6-digit OTP लें</strong>
               <small>
                 सही OTP verify होने के बाद ही
@@ -533,13 +546,11 @@ const RiderDashboard = {
                 id="otp_${this.esc(id)}"
                 class="r-otp-input"
                 placeholder="Enter 6-digit OTP"
-                oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6); RiderDashboard.syncOtpButton('${this.esc(id)}')"
-                onkeydown="if(event.key==='Enter'){event.preventDefault(); RiderDashboard.deliverWithOtp('${this.esc(id)}')}"
+                oninput="this.value=this.value.replace(/\\D/g,'').slice(0,6)"
               >
               <button
                 type="button"
                 class="r-btn success r-otp-submit"
-                disabled
                 onclick="RiderDashboard.deliverWithOtp('${this.esc(id)}')"
               >
                 <i class="fa-solid fa-circle-check"></i>
@@ -555,13 +566,35 @@ const RiderDashboard = {
   },
 
 
-  syncOtpButton(id) {
-    const input = document.getElementById(`otp_${id}`);
-    const btn = input?.closest('.r-otp-delivery')?.querySelector('.r-otp-submit');
-    const otp = String(input?.value || '').replace(/\D/g, '').slice(0, 6);
+  async finalizeTryOn(id) {
+    const otp=String(document.getElementById(`tryonOtp_${id}`)?.value||'').replace(/\D/g,'').slice(0,6);
+    const msg=document.getElementById(`tryonMsg_${id}`);
+    const setMsg=(text,type='')=>{if(msg){msg.className=`r-otp-message ${type}`.trim();msg.textContent=text||'';}};
+    if(otp.length!==6){setMsg('Enter the customer 6-digit OTP.','error');return;}
 
-    if (btn) {
-      btn.disabled = otp.length !== 6;
+    const allTryItems=[...document.querySelectorAll('.r-tryon-keep')].filter(x=>String(x.dataset.order)===String(id));
+    const keep=allTryItems.filter(x=>x.checked).map(x=>x.value);
+    const payment=document.getElementById(`tryonPay_${id}`)?.value||'cash';
+    const amount=keep.reduce((n,itemId)=>{
+      const el=allTryItems.find(x=>x.value===itemId);
+      return n+Number(el?.dataset.amount||0);
+    },0);
+    const order=this.orders.find(x=>String(x.OrderID)===String(id));
+    const finalAmount=amount+Number(order?.TryOnVisitFee||0);
+
+    if(!confirm(`Customer is keeping ${keep.length} item(s). Collect ₹${finalAmount.toLocaleString('en-IN')} by ${payment.toUpperCase()} and finalize?`))return;
+
+    setMsg('Finalizing Try-On…','info');
+    try{
+      const r=await DesiMallAPI.finalizeRiderTryOn(id,{
+        KeepOrderItemIDs:keep,DeliveryOTP:otp,CollectionMethod:payment
+      },this.session.token||'');
+      if(!r?.success)throw new Error(r?.message||'Try-On finalization failed');
+      setMsg(r.message||'Try-On completed.','success');
+      alert(r.message||'Try-On completed.');
+      await this.load();
+    }catch(error){
+      setMsg(error?.message||'Could not finalize Try-On.','error');
     }
   },
 
@@ -599,14 +632,6 @@ const RiderDashboard = {
 
       if(r?.success){
         setMsg('OTP verified. Order delivered successfully.','success');
-
-        if (this.geoWatchId !== null && navigator.geolocation) {
-          navigator.geolocation.clearWatch(this.geoWatchId);
-          this.geoWatchId = null;
-        }
-        this.geoOrder = null;
-        this.setGpsStatus('Delivery completed — live location stopped');
-
         await this.load();
         return;
       }
@@ -616,25 +641,13 @@ const RiderDashboard = {
       setMsg(error?.message||'Wrong / invalid OTP. Please enter the customer OTP.','error');
     }finally{
       if(btn && document.body.contains(btn)){
-        const order = this.orders.find(o => String(o?.OrderID || '') === String(id || ''));
-        const rawMode = String(order?.FulfillmentMode || '').toLowerCase();
-        const serviceMode = ['service','services'].includes(rawMode);
-        btn.innerHTML = serviceMode
-          ? '<i class="fa-solid fa-circle-check"></i> Verify OTP & Complete'
-          : '<i class="fa-solid fa-circle-check"></i> Verify OTP & Deliver';
-        this.syncOtpButton(id);
+        btn.disabled=false;
+        btn.innerHTML='<i class="fa-solid fa-circle-check"></i> Verify OTP & Deliver';
       }
     }
   },
 
   async update(id, status) {
-    if (String(status || '').trim().toLowerCase() === 'delivered') {
-      alert('Delivery complete karne ke liye customer OTP verification compulsory hai.');
-      const otpInput = document.getElementById(`otp_${id}`);
-      otpInput?.focus();
-      return;
-    }
-
     if (!confirm(`${id} ko ${status} mark karein?`)) return;
 
     try {
@@ -684,10 +697,10 @@ const RiderDashboard = {
         navigator.geolocation.clearWatch(this.geoWatchId);
         this.geoWatchId = null;
       }
-      this.setGpsStatus('No active live-tracking delivery');
+      this.setGpsStatus('No active Tez delivery');
       if (typeof startGpsBtn !== 'undefined') {
         startGpsBtn.disabled = true;
-        startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> No live delivery';
+        startGpsBtn.innerHTML = '<i class="fa-solid fa-location-dot"></i> No Tez delivery';
       }
       return;
     }
@@ -715,36 +728,11 @@ const RiderDashboard = {
     }
   },
 
-  startOrderLiveLocation(orderId) {
-    const selected = this.orders.find(
-      o => String(o?.OrderID || '') === String(orderId || '')
-    );
-
-    if (!selected) {
-      this.setGpsStatus('Order not found for live GPS', 'error');
-      return;
-    }
-
-    const status = String(selected.RiderStatus || '').toLowerCase();
-    const rawMode = String(selected.FulfillmentMode || '').toLowerCase();
-    const mapMode =
-      selected.IsTez === true ||
-      ['tez','food','service','services','try-on','try_on','tryon'].includes(rawMode);
-
-    if (!mapMode || !/pickup assigned|pickup accepted|picked up|on the way|reached customer/.test(status)) {
-      this.setGpsStatus('This order is not in a live-tracking stage', 'error');
-      return;
-    }
-
-    this.geoOrder = selected;
-    this.startLiveLocation(true, selected);
-  },
-
-  startLiveLocation(userInitiated = false, selectedOrder = null) {
-    const order = selectedOrder || this.currentTrackableTezOrder();
+  startLiveLocation(userInitiated = false) {
+    const order = this.currentTrackableTezOrder();
 
     if (!order) {
-      this.setGpsStatus('No active live-tracking delivery', 'error');
+      this.setGpsStatus('No active Tez delivery', 'error');
       return;
     }
 
@@ -757,8 +745,7 @@ const RiderDashboard = {
     this.gpsStartedByUser = this.gpsStartedByUser || userInitiated;
 
     if (this.geoWatchId !== null) {
-      this.geoOrder = order;
-      this.setGpsStatus(`Live location is on for ${order.OrderID}`, 'live');
+      this.setGpsStatus('Live location is on', 'live');
       return;
     }
 
@@ -845,7 +832,7 @@ const RiderDashboard = {
       }
 
       this.setGpsStatus(
-        `${this.geoOrder?.OrderID || 'Order'} · Live GPS ${lat.toFixed(5)}, ${lon.toFixed(5)} · ±${Math.round(accuracy || 0)}m`,
+        `Live GPS ${lat.toFixed(5)}, ${lon.toFixed(5)} · ±${Math.round(accuracy || 0)}m`,
         'live'
       );
 
