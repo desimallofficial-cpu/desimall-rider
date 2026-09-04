@@ -1361,6 +1361,12 @@ const DesiMallAPI = {
     });
   },
 
+  riderKyc(token=''){return this._roleRest('rider','/api/v1/rider/kyc',{method:'GET',token});},
+  uploadRiderKycDocument(data={}){return this._roleRest('rider','/api/v1/rider/kyc/document',{method:'POST',data:{DocumentType:data.DocumentType,FileName:data.FileName,MimeType:data.MimeType,Base64Data:data.Base64Data},token:data.Token||data.token||''});},
+  submitRiderKyc(data={},token=''){return this._roleRest('rider','/api/v1/rider/kyc/submit',{method:'POST',data,token});},
+  riderPasswordReset(email){return this._roleRest('rider','/api/v1/rider/password-reset',{method:'POST',data:{Email:email},token:''});},
+  riderPasswordResetComplete(data={}){return this._roleRest('rider','/api/v1/rider/password-reset/complete',{method:'POST',data,token:''});},
+
   riderLogout(token) {
     return this._roleRest('rider', '/api/v1/rider/logout', {
       method: 'POST',

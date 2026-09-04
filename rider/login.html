@@ -201,7 +201,7 @@
     </div>
 
     <div class="visual-footer">DesiMall Rider Center</div>
-  </section>
+  <div id="forgotModal" class="forgot-modal"><div class="forgot-card"><div class="forgot-head"><h3>Reset Rider Password</h3><button type="button" id="closeForgot">×</button></div><p>Enter your registered Gmail/email address.</p><input id="resetEmail" type="email" placeholder="you@gmail.com"><button type="button" class="r-btn" id="sendReset">Send reset link</button><div id="resetMsg" class="r-msg"></div></div></div><style>.kyc-box{padding:11px;border:1px dashed #42536a;border-radius:9px;background:#0d1723;display:grid;gap:9px}.kyc-box>strong{font-size:11px}.kyc-box>span{font-size:9px;color:#9fb0c5;line-height:1.4}.kyc-box label{font-size:10px!important}.forgot-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;align-items:center;justify-content:center;padding:20px}.forgot-modal.open{display:flex}.forgot-card{width:min(400px,95vw);background:#111b27;border:1px solid #304158;border-radius:13px;padding:20px}.forgot-head{display:flex;justify-content:space-between}.forgot-head button{background:none;border:0;color:#94a3b8;font-size:20px}.forgot-card input{width:100%;box-sizing:border-box;padding:11px;margin:8px 0 12px;background:#0d1723;color:#fff;border:1px solid #304158;border-radius:8px}</style>
 
   <section class="rider-login-form-zone">
     <main class="r-auth">
@@ -233,8 +233,7 @@
         <button class="r-btn" type="submit">Login</button>
 
         <div id="forgotPasswordNote" class="forgot-note">
-          <strong>Password reset:</strong> testing phase me Rider password reset Admin/Support se handle hoga.
-          Contact: <a href="mailto:desimall.official@gmail.com">desimall.official@gmail.com</a>
+          <strong>Password reset:</strong> Enter the Gmail/email used for your Rider account. We will send a secure password reset link.
         </div>
       </form>
 
@@ -254,6 +253,7 @@
 
         <label>Vehicle number<input id="rVehicleNo"></label>
         <label>Service pincode<input id="rPincode" maxlength="6" inputmode="numeric"></label>
+        <div class="kyc-box"><strong>Rider KYC — mandatory</strong><span>Account banane ke baad documents aap khud submit karenge. Admin sirf review/approve/reject karega.</span><label>Aadhaar number<input id="rAadhaar" required></label><label>Driving licence number<input id="rDL" required></label><label>RC number<input id="rRC" required></label><label>Insurance number<input id="rInsurance"></label><label>Aadhaar document<input id="rAadhaarDoc" type="file" accept="image/*,.pdf" required></label><label>Driving licence document<input id="rDLDoc" type="file" accept="image/*,.pdf" required></label><label>RC document<input id="rRCDoc" type="file" accept="image/*,.pdf" required></label><label>Insurance document<input id="rInsuranceDoc" type="file" accept="image/*,.pdf"></label></div>
         <label>Password
           <div class="password-wrap">
             <input id="rPassword" type="password" minlength="6" autocomplete="new-password" required>

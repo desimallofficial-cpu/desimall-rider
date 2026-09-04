@@ -48,13 +48,8 @@ const RiderAuth = {
     togglePassword('showLoginPassword', 'password');
     togglePassword('showRegisterPassword', 'rPassword');
 
-    const forgotBtn = document.getElementById('forgotPasswordBtn');
-    const forgotNote = document.getElementById('forgotPasswordNote');
-    if (forgotBtn && forgotNote) {
-      forgotBtn.onclick = () => {
-        forgotNote.classList.toggle('show');
-      };
-    }
+    const forgotBtn=document.getElementById('forgotPasswordBtn'),forgotModal=document.getElementById('forgotModal'),closeForgot=document.getElementById('closeForgot'),sendReset=document.getElementById('sendReset');
+    if(forgotBtn&&forgotModal){forgotBtn.onclick=()=>{forgotModal.classList.add('open');document.getElementById('resetEmail').value=document.getElementById('identifier')?.value.trim()||''};closeForgot.onclick=()=>forgotModal.classList.remove('open');sendReset.onclick=async()=>{const msg=document.getElementById('resetMsg');sendReset.disabled=true;msg.textContent='Sending…';try{const x=await DesiMallAPI.riderPasswordReset(document.getElementById('resetEmail').value.trim());msg.textContent=x.message||'Reset link sent. Check email.';msg.classList.add('good')}catch(e){msg.textContent=e.message||'Could not send reset link.'}finally{sendReset.disabled=false}}}
 
     const remember = document.getElementById('rememberRider');
     const identifier = document.getElementById('identifier');
@@ -146,29 +141,6 @@ const RiderAuth = {
     }
   },
 
-  async register() {
-    const btn = document.querySelector('#registerForm button');
-    btn.disabled = true;
-
-    try {
-      const r = await DesiMallAPI.riderRegister({
-        RiderName: rName.value.trim(),
-        Mobile: rMobile.value.trim(),
-        Email: rEmail.value.trim(),
-        VehicleType: rVehicle.value,
-        VehicleNumber: rVehicleNo.value.trim(),
-        ServicePincode: rPincode.value.trim(),
-        Password: rPassword.value
-      });
-
-      this.msg(r.message || 'Registration submitted.', true);
-      if (r.success) registerForm.reset();
-    } catch (error) {
-      this.msg(error?.message || 'Registration failed');
-    } finally {
-      btn.disabled = false;
-    }
-  }
-};
+  async register(){const btn=document.querySelector('#registerForm button[type="submit"]');btn.disabled=true;try{const x=await DesiMallAPI.riderRegister({RiderName:rName.value.trim(),Mobile:rMobile.value.trim(),Email:rEmail.value.trim(),VehicleType:rVehicle.value,VehicleNumber:rVehicleNo.value.trim(),ServicePincode:rPincode.value.trim(),Password:rPassword.value});if(!x.success)throw new Error(x.message||'Registration failed');if(x.token){localStorage.setItem('desimall_rider_onboarding',JSON.stringify({token:x.token,refreshToken:x.refreshToken||'',email:rEmail.value.trim()}));this.msg('Account created. Complete KYC now.',true);setTimeout(()=>location.replace('kyc.html'),400)}else{this.msg(x.message||'Registration submitted.',true);registerForm.reset()}}catch(e){this.msg(e.message||'Registration failed')}finally{btn.disabled=false}}};
 
 document.addEventListener('DOMContentLoaded', () => RiderAuth.init());
